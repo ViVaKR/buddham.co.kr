@@ -1,0 +1,18 @@
+<loading-error-wrapper [service]="service">
+  <body-layout>
+    <title-layout [title]="title" [color]="color"/>
+    <div content>
+
+      <form>
+
+
+      </form>
+
+      <pre>
+      {{ data() | json }}
+    </pre>
+
+      <button matButton (click)="goList()">목록으로</button>
+    </div>
+  </body-layout>
+</loading-error-wrapper>

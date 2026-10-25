@@ -1,0 +1,57 @@
+{
+  "name": "buddham.co.kr",
+  "version": "0.1.1",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
+  },
+  "private": true,
+  "packageManager": "npm@11.21.1",
+  "dependencies": {
+    "@angular/aria": "^22.2.4",
+    "@angular/cdk": "^22.2.4",
+    "@angular/common": "^22.2.3",
+    "@angular/compiler": "^22.2.3",
+    "@angular/core": "^22.2.3",
+    "@angular/elements": "^22.2.3",
+    "@angular/forms": "^22.2.3",
+    "@angular/material": "^22.2.4",
+    "@angular/platform-browser": "^22.2.3",
+    "@angular/router": "^22.2.3",
+    "@microsoft/signalr": "10.0.11",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@tailwindcss/typography": "^0.5.20",
+    "@types/katex": "^0.16.8",
+    "angular-split": "^20.0.0",
+    "glob": "^13.0.6",
+    "jwt-decode": "^4.0.0",
+    "katex": "0.16.47",
+    "marked": "18.0.10",
+    "ngx-markdown": "^22.0.0",
+    "npm": "^12.0.2",
+    "rxjs": "~7.8.2",
+    "tailwindcss": "^4.3.3",
+    "tslib": "^2.8.1",
+    "uuid": "14.0.3",
+    "uuid4": "^2.0.3"
+  },
+  "devDependencies": {
+    "@angular/build": "^22.2.4",
+    "@angular/cli": "^22.2.4",
+    "@angular/compiler-cli": "^22.2.3",
+    "@angular/localize": "^22.2.3",
+    "postcss": "8.5.30",
+    "prettier": "^3.9.10",
+    "typescript": "~6.0.3"
+  },
+  "allowScripts": {
+    "@parcel/watcher": true,
+    "esbuild": true,
+    "fsevents": true,
+    "lmdb": true,
+    "msgpackr-extract": true
+  }
+}

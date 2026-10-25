@@ -1,0 +1,28 @@
+{
+    "COMMON": {
+        "BUTTON": {
+            "SUBMIT": "제출",
+            "CANCEL": "취소",
+            "SAVE": "저장"
+        }
+    },
+    "LANG": {
+        "KO": "한국어",
+        "PALI_ROMAN": "팔리어 (로마자)",
+        "PALI_SINHALA": "팔리어 (싱할라)",
+        "PALI_BURMESE": "팔리어 (버마)",
+        "SANSKRIT": "산스크리트어",
+        "TIBETAN": "티베트어",
+        "CLASSICAL_CHINESE": "한문"
+    },
+    "SCRIPTURE": {
+        "LABEL": {
+            "BOOK": "권",
+            "CHAPTER": "품",
+            "PASSAGE": "절",
+            "ORIGINAL": "원문",
+            "SELECT_SCRIPT": "언어 선택",
+            "PARALLEL": "병렬 보기"
+        }
+    }
+}

@@ -1,0 +1,45 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "esnext",
+    "module": "preserve",
+    "paths": {
+      "@app/*": ["./src/app/*"],
+      "@env/*": ["./src/environments/*"],
+      "@modules/*": ["./src/app/modules/*"],
+      "@models/*": ["./src/app/models/*"],
+      "@core/*": ["./src/app/core/*"],
+      "@pages/*": ["./src/app/pages/*"],
+      "@shared/*": ["./src/app/shared/*"],
+      "@data/*": ["./src/app/data/*"],
+      "@layout/*": ["./src/app/layout/*"],
+      "@services/*": ["./src/app/core/services/*"],
+      "@interfaces/*": ["./src/app/core/interfaces/*"],
+      "@enums/*": ["./src/app/core/enums/*"],
+      "@classes/*": ["./src/app/core/classes/*"],
+      "@pipes/*": ["./src/app/pipes/*"],
+      "@directives/*": ["./src/app/core/directives/*"]
+    }
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  },
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    }
+  ]
+}

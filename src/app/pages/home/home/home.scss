@@ -1,0 +1,462 @@
+/* ============================================
+   🕉️ 연꽃처럼 떨어지는 글자
+   ============================================ */
+@keyframes lotus-drop {
+    0% {
+        opacity: 0;
+        transform: translateY(-100px) scale(0.8) rotateZ(-4deg);
+    }
+
+    40% {
+        opacity: 1;
+        transform: translateY(0) scale(1.05) rotateZ(1deg);
+    }
+
+    60% {
+        transform: translateY(-6px) scale(1) rotateZ(0deg);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.floating-text-container {
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    text-align: center;
+    overflow: visible;
+    opacity: 0.75s;
+    pointer-events: none;
+
+    // -- 추가 부분 --
+    white-space: nowrap; //글자가 길어도 절대 밑으로 떨어지지 않게!
+    display: flex; // 중앙 정렬을 더 확실하게
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.floating-char {
+    display: inline-block;
+    // forwards를 써야 애니메이션 종료 후 사라지지 않습니다.
+    animation: lotus-drop 1.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    opacity: 0;
+    color: white;
+    margin: 0 2px;
+}
+
+/* ============================================
+   🕉️ 폴더 UI (left, middle, right 공통)
+   ============================================ */
+.folder {
+    background: #016a8b;
+    width: 130px;
+    height: 90px;
+    position: absolute;
+    top: 70%;
+    border-radius: 5px;
+    cursor: pointer;
+    opacity: 0.4;
+    transform: translateX(-50%);
+
+    &:before {
+        content: '';
+        position: absolute;
+        background-color: #0380a7;
+        width: 130px;
+        height: 90px;
+        top: 10px;
+        left: 0;
+        border-radius: 5px;
+        z-index: 99;
+        box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.5);
+        transition: all 0.5s;
+    }
+
+    &:after {
+        content: '';
+        position: absolute;
+        width: 60px;
+        height: 20px;
+        top: -8px;
+        left: 0;
+        background: #016a8b;
+        border-radius: 5px;
+    }
+
+    &:hover:before {
+        transform: rotateX(20deg);
+    }
+
+    .file {
+        position: absolute;
+        width: 70px;
+        height: 70px;
+        top: 0;
+        border-radius: 5px;
+        box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+        text-align: center;
+        color: white;
+        font-size: 1.5em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 1s;
+
+        &:nth-child(1) {
+            left: 10px;
+            background-color: #e41515;
+            z-index: 4;
+        }
+
+        &:nth-child(2) {
+            left: 23px;
+            background-color: #83c3a6;
+            z-index: 3;
+        }
+
+        &:nth-child(3) {
+            left: 36px;
+            background-color: #f4ba44;
+            z-index: 2;
+        }
+
+        &:nth-child(4) {
+            left: 50px;
+            background-color: #b405fa;
+            z-index: 1;
+        }
+    }
+
+    &:hover .file:nth-child(1) {
+        transform: translate(-150%, -130%);
+    }
+
+    &:hover .file:nth-child(2) {
+        transform: translate(-50%, -130%);
+    }
+
+    &:hover .file:nth-child(3) {
+        transform: translate(50%, -130%);
+    }
+
+    &:hover .file:nth-child(4) {
+        transform: translate(150%, -130%);
+    }
+}
+
+/* --------------------------------------------
+   위치만 다르게: left / middle / right
+   -------------------------------------------- */
+.folder-left {
+    left: 30%;
+}
+
+.folder-middle {
+    left: 50%;
+}
+
+.folder-right {
+    left: 70%;
+}
+
+/* ============================================
+   개발 진행 안내 관관(Seal) 스타일
+   ============================================ */
+/* 🕉️ 개발 진행 안내 낙관(Seal) 스타일 */
+.dev-badge {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translateX(-50%);
+
+    z-index: 100;
+    cursor: help;
+    opacity: 0.2; // 평소에는 있는 듯 없는 듯
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: auto;
+
+    &:hover {
+        opacity: 1;
+        transform: scale(1.2) translateX(-50%);
+        top: 36%;
+        left: 50%;
+    }
+
+    .seal-box {
+        border: 1px solid #d4af37; // 황금색 테두리
+        padding: 8px 12px;
+        background: rgba(26, 31, 33, 0.6); // 어두운 반투명 배경
+        backdrop-filter: blur(4px);
+        color: #d4af37;
+        font-family: 'Noto Sans KR', serif; // 폰트
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
+    }
+
+    .status-dot {
+        width: 6px;
+        height: 6px;
+        background-color: #ff6b81; // 연꽃 핑크색 점
+        border-radius: 50%;
+        margin-bottom: 4px;
+        animation: blink 2s infinite;
+    }
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+/* ============================================
+   Welcome Text
+   ============================================ */
+.welcome-text {
+    font-family: 'Noto Sans KR', serif;
+    font-size: 0.85rem;
+    color: #d4af37; // 황금색 (자비의 빛)
+    opacity: 0;
+    animation: fade-in-up 2s ease-out forwards;
+    letter-spacing: 0.05em;
+
+    // 수묵화처럼 번지는 느낌
+    filter: blur(0.3px);
+    text-shadow: 0 0 5px rgba(212, 175, 55, 0.2);
+
+    &:before {
+        content: '•';
+        margin-right: 8px;
+        color: #d4af37; // 황금색 포인트
+        animation: pulse-dot 3s infinite;
+    }
+}
+
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 0.7;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   연꽃잎 미학
+   ============================================ */
+.petal-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none; // 마우스 클릭 방해 금지
+    z-index: 9999;
+    overflow: hidden;
+}
+
+.petal {
+    position: absolute;
+    width: 15px;
+    height: 25px;
+    background: radial-gradient(circle at 30% 30%, #ffb7c5, #ff6b81); // 연분홍 그라데이션
+    border-radius: 50% 0 50% 50%; // 연꽃잎 모양
+    opacity: 0;
+    filter: blur(0.5px);
+    animation: petal-fly 2s ease-out forwards;
+}
+
+@keyframes petal-fly {
+    0% {
+        opacity: 0;
+        transform: translate(0, 0) rotate(0deg) scale(0);
+    }
+
+    20% {
+        opacity: 0.8;
+        transform: translate(10px, -10px) rotate(45deg) scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        // 바람에 날리듯 대각선 아래로 이동하며 회전
+        transform: translate(40px, 80px) rotate(180deg) scale(0.5);
+    }
+}
+
+/* ============================================
+   하단 영역 전용
+   ============================================ */
+
+.footer-container {
+    // 배경에 아주 살짝 어두운 그라데이션을 깔아 텍스트 가독성 확보
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, transparent 100%);
+    backdrop-filter: blur(2px); // 뒤 배경(연꽃)과 살짝 분리되는 신비감
+}
+
+.ip-text {
+    text-shadow: 0 0 8px rgba(148, 163, 184, 0.3);
+    letter-spacing: 0.15em;
+    position: relative;
+
+    // IP 앞에 작은 점(Bindu) 하나로 포인트
+    &:before {
+        content: '•';
+        margin-right: 8px;
+        color: #d4af37; // 황금색 포인트
+        animation: pulse-dot 3s infinite;
+    }
+}
+
+.quote-text {
+    transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0);
+
+    // 새로운 법문이 올 때 반짝이는 효과
+    &.glowing {
+        text-shadow:
+            0 0 15px rgba(212, 175, 55, 0.8),
+            0 0 5px rgba(255, 255, 255, 0.5);
+        color: #fff;
+    }
+}
+
+@keyframes pulse-dot {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+}
+
+/* ============================================
+   🕉️ 사경 버튼
+   ============================================ */
+
+button {
+    background: linear-gradient(135deg, #05b3e3 0%, #1a1f21 100%);
+    padding: 0.75em 1.5em;
+    border: 3px solid #d4af37;
+    /* 황금색 */
+    color: #f5f5f5;
+    letter-spacing: 3px;
+    font-weight: 600;
+    border-radius: 15px;
+    cursor: pointer;
+    margin: auto;
+    display: grid;
+    place-items: center;
+
+    transition:
+        color 0.4s ease,
+        border-color 0.4s ease,
+        transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.35s ease,
+        letter-spacing 0.35s ease;
+
+    opacity: 0.5;
+    position: absolute;
+    bottom: 125px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+}
+
+button:before,
+button:after {
+    content: '';
+    position: absolute;
+    background: radial-gradient(circle, #ffd700, #d4af37);
+    height: 100%;
+    width: 100%;
+    z-index: -2;
+    opacity: 0;
+    border-radius: 12px;
+    transition: opacity 0.3s ease;
+}
+
+button:hover {
+    color: #ffd700;
+    border-color: #ffd700;
+
+    box-shadow:
+        0 0 20px rgba(255, 215, 0, 0.4),
+        0 0 40px rgba(255, 215, 0, 0.2),
+        0 0 60px rgba(255, 215, 0, 0.1);
+    letter-spacing: 5px;
+    transform: translate(-50%, -2px);
+}
+
+button:hover:before {
+    animation: golden-pulse 2.5s ease-out infinite;
+}
+
+button:hover:after {
+    animation: golden-pulse 2.5s 0.8s ease-out infinite;
+}
+
+button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.3);
+}
+
+button:active {
+    transform: translateX(-50%) translateY(0) scale(0.98);
+}
+
+@keyframes golden-pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.35;
+    }
+
+    70% {
+        opacity: 0.1;
+    }
+
+    100% {
+        transform: scale(1.8);
+        opacity: 0;
+    }
+}
+
+@media (max-width: 640px) {
+    button {
+        bottom: 6%;
+        padding: 0.6em 1.2em;
+        letter-spacing: 2px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .floating-char {
+        display: inline-block;
+        animation: lotus-drop 1.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        opacity: 0;
+        font-size: 3.5rem;
+        text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    }
+}

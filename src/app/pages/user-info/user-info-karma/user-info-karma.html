@@ -1,0 +1,204 @@
+<body-layout>
+
+  <title-layout [title]="title" [color]="color" />
+  <div content class="w-full h-screen p-6 bg-gray-50">
+
+    @if (userInfo(); as user) {
+    <div class="w-full mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+
+      <div class="bg-linear-to-r from-sky-600 to-amber-600 p-6 text-white">
+        <div class="flex items-center gap-4">
+          <img
+               [src]="getAvatar()"
+               alt="avatar"
+               loading="lazy"
+               width="80" height="80"
+               class="w-20 h-20 rounded-full bg-no-repeat bg-center object-contain border-4 border-white shadow-lg">
+          <div>
+            <h2 class="text-2xl font-bold">{{ user.fullName }}</h2>
+            <p class="text-blue-100">&#64;{{ user.pseudonym }}</p>
+            <div class="flex gap-2 mt-2">
+              @for (role of user.roles; track role) {
+              <span class="px-3 py-1 bg-white/20 rounded-full text-sm">
+                {{ role.en }}({{role.ko}})
+              </span>
+              }
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 정보 그리드 -->
+      <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- 계정 정보 섹션 -->
+        <div class="space-y-4">
+          <h3 class="text-lg font-semibold text-gray-800 border-b pb-2">
+            계정 정보
+          </h3>
+
+          <div class="info-item">
+            <mat-icon class="text-gray-500">email</mat-icon>
+            <div>
+              <p class="text-sm text-gray-500">이메일</p>
+              <p class="font-medium">{{ user.email }}</p>
+              @if (user.emailConfirmed) {
+              <mat-chip class="mt-1" color="primary">인증됨</mat-chip>
+              } @else {
+              <mat-chip class="mt-1" color="warn">미인증</mat-chip>
+              }
+            </div>
+          </div>
+
+          <div class="info-item">
+            <mat-icon class="text-gray-500">fingerprint</mat-icon>
+            <div>
+              <p class="text-sm text-gray-500">사용자 ID</p>
+              <p class="font-mono text-xs font-bold text-gray-600">{{ user.id | uppercase }}</p>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <mat-icon class="text-gray-500">wifi</mat-icon>
+            <div>
+              <p class="text-sm text-gray-500">최종 로그인 IP</p>
+              <p class="font-mono text-xs font-bold text-gray-600">{{ user.lastLoginIP }}</p>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <mat-icon class="text-gray-500">login</mat-icon>
+            <div>
+              <p class="text-sm text-gray-500">최근 로그인 시간</p>
+              <p class="font-noto text-xs font-bold text-gray-600">{{ user.lastLoginAt | date: 'yyyy-MM-dd hh:mm:ss' }}
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 보안 정보 섹션 -->
+        <div class="space-y-4">
+          <h3 class="text-lg font-semibold text-gray-800 border-b pb-2">
+            보안 정보
+          </h3>
+
+          <div class="info-item">
+            <mat-icon class="text-gray-500">person</mat-icon>
+            <div>
+              <p class="text-sm text-gray-500">회원상태</p>
+
+              @if(user.isActive) {
+              <p class="font-bold text-blue-500">정회원</p>
+              }@else {
+              <p class="font-bold text-red-500">비회원</p>
+              }
+            </div>
+          </div>
+          <div class="info-item">
+            <mat-icon class="text-gray-500">security</mat-icon>
+            <div>
+              <p class="text-sm text-gray-500">2단계 인증</p>
+
+              <p class="font-bold">
+                {{ user.twoFactorEnabled ? '활성' : '비활성' }}
+              </p>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <mat-icon class="text-gray-500">lock</mat-icon>
+            <div>
+              <p class="text-sm text-gray-500">로그인 실패 횟수</p>
+              <p class="font-medium"
+                 [class.text-red-600]="user.accessFailedCount > 0">
+                {{ user.accessFailedCount }}회
+              </p>
+            </div>
+          </div>
+
+          <div class="info-item ">
+            <mat-icon class="text-gray-500">manage_accounts</mat-icon>
+            <p class="text-sm text-gray-500 mb-2">권한 추가/삭제 </p>
+
+            <form [formGroup]="form" (ngSubmit)="onSubmit($event)">
+              <mat-form-field class="w-full" appearance="outline">
+                <mat-label>현재 권한</mat-label>
+                <mat-chip-grid #chipGrid formControlName="roles">
+                  @for (role of form.get('roles')?.value; track role) {
+                  <mat-chip-row (removed)="removeRole(role)">
+                    {{ role }}
+                    <button matChipRemove>
+                      <mat-icon fontSet="material-icons-outlined">cancel</mat-icon>
+                    </button>
+                  </mat-chip-row>
+                  }
+
+                  <input
+                         placeholder="권한추가..."
+                         class="text-base font-noto text-sky-400"
+                         [matChipInputFor]="chipGrid"
+                         (matChipInputTokenEnd)="addRole($event)" />
+
+                  <mat-icon matSuffix
+                            (click)="onSubmit($event)"
+                            fontSet="material-icons-outlined"
+                            class="cursor-pointer mr-2 my-auto text-slate-400 hover:text-sky-600">save
+                  </mat-icon>
+
+                </mat-chip-grid>
+              </mat-form-field>
+            </form>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- 액션 버튼 -->
+      <div class="p-6 bg-gray-50 border-t flex gap-3 justify-center">
+
+        <button matButton="filled" (click)="goList()">
+          <mat-icon>edit</mat-icon>
+          회원목록
+        </button>
+
+        <button matButton="filled"
+                class="bg-teal-700"
+                (click)="goToVipassana(user.id)">
+          <mat-icon>block</mat-icon>
+          정보수정
+        </button>
+
+        @if (!user.isDeleted && user.isActive) {
+        <button matButton="filled"
+                class="bg-red-400 hover:bg-rose-500"
+                (click)="onDeleteUser(user.id)">
+          <mat-icon>block</mat-icon>
+          계정정지
+        </button>
+        }@else{
+        <button matButton="filled"
+                class="bg-amber-400"
+                (click)="onRestoreUser(user.id)">
+          <mat-icon>block</mat-icon>
+          계정복구
+        </button>
+        }
+
+      </div>
+
+    </div>
+    }
+    @else {
+    <div class="flex items-center justify-center h-full">
+      <mat-card class="p-8 text-center">
+        <mat-icon class="text-red-500 text-6xl">error_outline</mat-icon>
+        <h3 class="text-xl font-semibold mt-4">오류 발생</h3>
+        <p class="text-gray-600 mt-2">사용자 정보를 불러올 수 없습니다.</p>
+      </mat-card>
+    </div>
+    }
+  </div>
+
+</body-layout>

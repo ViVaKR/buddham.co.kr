@@ -1,0 +1,293 @@
+@import 'tailwindcss' important;
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --font-roboto: 'Roboto', 'Noto Sans KR', sans-serif;
+  --font-roboto-con: 'Roboto Condensed', 'Noto Sans KR', sans-serif;
+  --font-cute: 'Cute Font', 'Chiron Sung HK', sans-serif;
+  --font-ibm: 'IBM Plex Sans KR', sans-serif;
+  --font-noto: 'Noto Sans KR', 'Poppins', sans-serif;
+  --font-poppins: 'Poppins', 'IBM Plex Sans KR', sans-serif;
+  --font-dongle: 'Dongle', sans-serif;
+  --font-pen: 'Nanum Pen Script', cursive;
+  --font-brush: 'Nanum Brush Script', cursive;
+  --font-flower: 'Sunflower', sans-serif;
+  --font-hanmun: 'Chiron Sung HK', 'Diphylleia', serif;
+  --font-a1: 'Gothic A1', sans-serif;
+  --font-stylish: 'Stylish', sans-serif;
+  --font-inter: 'Inter', 'IBM Plex Sans KR', sans-serif;
+  --font-indie: 'Indie Flower', 'font-noto', cursive;
+  --font-fira: 'Fira Code', monospace;
+  --font-pyeojin: 'PyeojinGothic', sans-serif;
+  --font-oswald: 'Oswald', sans-serif;
+
+  --background-image-alone: url('/assets/images/alone.webp');
+  --background-image-avatar-1: url('/assets/images/avatar-1.webp');
+  --background-image-avatar-2: url('/assets/images/avatar-2.svg');
+  --background-image-boy-1: url('/assets/images/boy-1.webp');
+  --background-image-boy-2: url('/assets/images/boy-2.webp');
+  --background-image-buddham-1: url('/assets/images/buddham-1.webp');
+  --background-image-buddham-2: url('/assets/images/buddham-2.webp');
+  --background-image-circle: url('/assets/images/circle.webp');
+  --background-image-foot: url('/assets/images/foot.webp');
+  --background-image-lake: url('/assets/images/lake.webp');
+  --background-image-lotus-1: url('/assets/images/lotus-1.webp');
+  --background-image-lotus-2: url('/assets/images/lotus-2.svg');
+  --background-image-robot: url('/assets/images/robot.webp');
+  --background-image-sand: url('/assets/images/sand.webp');
+  --background-image-smile-1: url('/assets/images/smile-1');
+  --background-image-smile-2: url('/assets/images/smile-2');
+  --background-image-logo-16: url('/assets/logos/logo-32.svg');
+  --background-image-logo-32: url('/assets/logos/logo-32.svg');
+  --background-image-logo-64: url('/assets/logos/logo-64.svg');
+  --background-image-logo-128: url('/assets/logos/logo-128.svg');
+  --background-image-logo-256: url('/assets/logos/logo-256.svg');
+  --background-image-logo-512: url('/assets/logos/logo-512.svg');
+  --background-image-logo-1024: url('/assets/logos/logo-1024.svg');
+  --background-image-winter: url('/assets/images/winter.webp');
+  --background-image-way: url('/assets/images/way.webp');
+
+  /* Color system */
+  --color-primary: oklch(62% 0.18 230);
+  --color-primary-hover: oklch(55% 0.18 230);
+
+  --color-surface: oklch(98% 0.01 230);
+  --color-surface-muted: oklch(94% 0.01 230);
+
+  --color-danger: oklch(60% 0.2 25);
+  --color-success: oklch(65% 0.18 140);
+
+  /* Radius system */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+
+  /* Shadow system */
+  --shadow-sm: 0 2px 4px rgb(0 0 0 / 0.06);
+  --shadow-md: 0 6px 14px rgb(0 0 0 / 0.12);
+}
+
+@layer base {
+  h1 {
+    @apply text-4xl font-bold;
+  }
+  h2 {
+    @apply text-3xl font-semibold;
+  }
+  h3 {
+    @apply text-2xl font-semibold;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary
+           text-white
+           hover:bg-primary-hover
+           rounded-xs
+           px-4 py-2
+           shadow-(--shadow-md);
+  }
+  .card {
+    @apply bg-white shadow-md rounded-lg p-6;
+  }
+}
+
+/* Tailwind Utilities Layer */
+@layer utilities {
+  /* 페이지 컨테이너 */
+  .page-container {
+    @apply grid relative min-h-screen w-full transition-all duration-300;
+  }
+
+  /* 페이지 배경 */
+  .bg-body {
+    @apply absolute inset-0 w-full h-screen overflow-y-scroll md:bg-linear-to-b md:from-sky-950/80 md:via-teal-700/50 md:via-50% to-transparent;
+  }
+
+  /* 왼쪽메뉴 배경  */
+  .bg-sidebar {
+    @apply overflow-y-auto flex flex-col;
+  }
+
+  /* 왼쪽메뉴 a button */
+  .btn-default {
+    @apply flex items-center justify-start gap-2 h-12 w-full px-4 py-2 text-base font-ibm border-2 border-transparent rounded-full hover:bg-slate-200 hover:text-slate-600 active:bg-amber-200;
+  }
+
+  /* 아바타 공통 */
+  .avatar {
+    @apply rounded-full object-center object-contain border-2;
+  }
+
+  .avatar-sm {
+    @apply w-8 h-8;
+  } /* 32px — 댓글용 */
+  .avatar-md {
+    @apply w-12 h-12;
+  } /* 48px — 목록용 */
+  .avatar-lg {
+    @apply w-15 h-15;
+  } /* 60px — 폼용 ✅ */
+  .avatar-xl {
+    @apply w-24 h-24;
+  } /* 96px — 프로필 페이지용 */
+}
+
+/* 배경 이미지 공통 스타일 */
+[style*='background-image'] {
+  image-rendering: auto;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* 라우트별 배경색 */
+main:has(.route-scripture),
+main:has(.route-transcription),
+main:has(.route-communication),
+main:has(.route-document),
+main:has(.route-about),
+main:has(.route-membership) {
+  background-color: rgba(240, 255, 255, 0.5);
+}
+
+main:has(.custom-card) {
+  @apply bg-red-400;
+}
+
+mat-label {
+  @apply text-slate-500 font-poppins;
+}
+
+mat-hint {
+  @apply text-slate-400 w-full text-xs font-poppins flex justify-end;
+}
+
+.menu-bar-nav {
+  @apply flex justify-between items-center w-full p-2 h-20 border-b-4 border-red-400 bg-sky-600
+  text-white;
+}
+
+.menu-bar-logo {
+  @apply h-full w-auto flex items-center
+     gap-4 px-2
+     justify-center cursor-pointer;
+}
+
+.menu-bar-title {
+  @apply text-2xl tracking-widest font-pyeojin
+  font-semibold hover:text-white text-sky-200/90 whitespace-nowrap;
+}
+
+.menu-bar-menus-btn {
+  @apply text-sm rounded-tr-md font-noto text-slate-50 hover:bg-amber-400 px-6;
+}
+
+.menu-bar-menus {
+  @apply w-full flex flex-row gap-2 justify-center items-center max-md:hidden;
+}
+
+.menu-a-link {
+  @apply text-base font-noto text-slate-50 rounded-tr-md
+        hover:bg-amber-400 px-6 mx-2;
+}
+
+.app-nav-showbar {
+  @apply w-full h-6 shrink-0 text-xs text-slate-500
+  flex flex-row justify-between items-center px-4 gap-4
+  bg-linear-to-r from-sky-200 via-sky-950/70 to-sky-200;
+}
+
+.breadcrumb-nav {
+  @apply flex items-center  my-auto
+         p-1 gap-1 w-auto h-auto text-xs
+         font-ibm text-slate-400/85 flex-wrap antialiased;
+}
+
+.breadcrumb-nav-a {
+  @apply flex items-center gap-1 hover:text-amber-100 transition-colors duration-200 cursor-pointer font-bold;
+}
+
+.login-form {
+  @apply w-full max-w-lg h-auto overflow-hidden border-amber-200/50 border backdrop-blur-md rounded-4xl shadow-md/20 bg-white/85 p-10 flex flex-col items-center relative;
+}
+
+.active-link {
+  font-weight: bold;
+  color: rgb(192, 131, 7);
+}
+
+.active {
+  color: oklch(93.246% 0.04356 100.116);
+}
+
+.dot {
+  color: #222222; /* 진한 색상 */
+  font-weight: bold; /* 더 진하게 */
+  font-size: 1.2rem; /* 살짝 크게 (기본보다 20% 업) */
+  margin: 0 8px; /* 좌우 간격 확보 */
+  vertical-align: middle; /* 중앙 정렬 유지 */
+}
+/* 장면 전환 애니메이션 */
+.entering {
+  animation: entering-fade 0.3s;
+}
+
+@keyframes entering-fade {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 페이지 전환 효과 */
+::view-transition-old(main-footer),
+::view-transition-new(main-footer),
+::view-transition-old(main-header),
+::view-transition-new(main-header) {
+  animation: none;
+  mix-blend-mode: normal; /* 가끔 색상 섞임 방지 */
+}
+
+::view-transition-old(root) {
+  animation: fade-out 0.4s ease-in-out forwards;
+}
+
+::view-transition-new(root) {
+  animation: slide-down 0.4s ease-out forwards;
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    /* transform: translateY(-5px); */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0); /* 제자리로 도착 */
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,34 @@
+<mat-form-field
+                appearance="outline"
+                class="w-full">
+  <mat-label>서체 선택</mat-label>
+  <mat-select
+              [value]="selectedFont()"
+              (selectionChange)="onFontChange($event.value)">
+
+    <mat-select-trigger>
+      <span [class]="selectedFontClass()">
+        {{ getSelectedFontLabel() }}
+      </span>
+    </mat-select-trigger>
+
+    @for (font of fonts; track font.value) {
+    <mat-option [value]="font.value">
+      <div class="flex items-center gap-2">
+        <span class="text-base text-sky-600 w-auto"> {{ font.label }} </span>
+        @if(font.value === 'font-roboto' || font.value === 'font-poppins' || font.value === 'font-roboto-con') {
+        <span [class]="font.className" class="text-lg"> {{ font.english }} </span>
+        }@else {
+        <span [class]="font.className" class="text-base"> {{ font.korean }} </span>
+        }
+        @if(font.value ==='font-hanmun' || font.value === 'font-hanmun2'){
+        <span [class]="font.className" class="text-lg"> {{ font.hanja }} </span>
+        }@else {
+        <span [class]="font.className" class="text-lg"> {{ font.sanskrit }} </span>
+        }
+      </div>
+    </mat-option>
+    }
+  </mat-select>
+  <mat-icon matPrefix>font_download</mat-icon>
+</mat-form-field>

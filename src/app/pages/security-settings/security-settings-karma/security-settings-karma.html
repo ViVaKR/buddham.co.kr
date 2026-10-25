@@ -1,0 +1,148 @@
+<h2 mat-dialog-title class="flex items-center gap-2">
+    <mat-icon>security</mat-icon>
+    2단계 인증 설정
+</h2>
+
+<mat-dialog-content class="min-h-96">
+
+    <!-- ✅ Step 1: QR 코드 스캔 -->
+    @if (step() === 0) {
+        @if (isLoading()) {
+            <div class="flex justify-center items-center p-8">
+                <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+            </div>
+        } @else if (setupData()) {
+            <div class="text-center py-4">
+                <h3 class="text-xl font-bold mb-4">1단계: QR 코드 스캔</h3>
+                <p class="mb-4">Google Authenticator 또는 호환 앱으로 QR 코드를 스캔하세요:</p>
+
+                <!-- QR 코드 이미지 -->
+                <img [src]="setupData()!.qrCodeImageUrl"
+                     alt="QR Code"
+                     class="mx-auto mb-4 border-2 border-gray-300 rounded p-2 max-w-xs">
+
+                <!-- 수동 입력 코드 -->
+                <details class="mt-4 text-left max-w-md mx-auto">
+                    <summary class="cursor-pointer text-blue-600 hover:text-blue-800 text-center">
+                        QR 코드를 스캔할 수 없나요? 수동으로 입력하기
+                    </summary>
+                    <div class="mt-2 p-4 bg-gray-100 rounded">
+                        <p class="text-sm text-gray-600 mb-2">다음 키를 앱에 입력하세요:</p>
+                        <code
+                                class="block text-base font-mono bg-white px-3 py-2 rounded border break-all"> {{ setupData()!.sharedKey }} </code>
+                    </div>
+                </details>
+
+                <!-- 다음 버튼 -->
+                <div class="mt-8">
+                    <button matButton="filled"
+                            color="primary"
+                            (click)="nextStep()"
+                            class="px-8">
+                        다음
+                        <mat-icon iconPositionEnd>arrow_forward</mat-icon>
+                    </button>
+                </div>
+            </div>
+        }
+    }
+
+    <!-- ✅ Step 2: 코드 확인 -->
+    @if (step() === 1) {
+        <div class="py-4 max-w-md mx-auto">
+            <h3 class="text-xl font-bold mb-4 text-center">2단계: 인증 코드 확인</h3>
+
+            <form [formGroup]="verifyForm" (ngSubmit)="verifyCode()">
+                <p class="mb-4 text-center">앱에 표시된 6자리 코드를 입력하세요:</p>
+
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>인증 코드</mat-label>
+                    <input matInput
+                           type="text"
+                           inputmode="numeric"
+                           maxlength="6"
+                           placeholder="000000"
+                           formControlName="code"
+                           autocomplete="one-time-code">
+                    <mat-icon matPrefix>pin</mat-icon>
+
+                    @if (verifyForm.get('code')?.hasError('required') &&
+                    verifyForm.get('code')?.touched) {
+                        <mat-error>인증 코드를 입력해주세요</mat-error>
+                    }
+                    @if (verifyForm.get('code')?.hasError('pattern')) {
+                        <mat-error>6자리 숫자를 입력해주세요</mat-error>
+                    }
+                </mat-form-field>
+
+                <div class="flex gap-2 mt-6 justify-center">
+                    <button matButton
+                            type="button"
+                            (click)="prevStep()">
+                        <mat-icon>arrow_back</mat-icon>
+                        이전
+                    </button>
+                    <button matButton="filled"
+                            color="primary"
+                            type="submit"
+                            [disabled]="verifyForm.invalid || isVerifying()">
+                        @if (isVerifying()) {
+                            <mat-spinner diameter="20"></mat-spinner>
+                        } @else {
+                            확인
+                        }
+                    </button>
+                </div>
+            </form>
+        </div>
+    }
+
+    <!-- ✅ Step 3: 복구 코드 -->
+    @if (step() === 2) {
+        <div class="py-4 max-w-2xl mx-auto">
+            <h3 class="text-xl font-bold mb-4 text-center">3단계: 복구 코드 저장</h3>
+
+            <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
+                <div class="flex items-start">
+                    <mat-icon class="text-red-600 mr-2">warning</mat-icon>
+                    <div>
+                        <p class="font-bold text-red-900">매우 중요!</p>
+                        <p class="text-sm text-red-700">
+                            이 복구 코드들은 인증 앱에 접근할 수 없을 때 사용됩니다.
+                            안전한 곳에 보관하세요. 이 코드들은 다시 확인할 수 없습니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-100 p-4 rounded mb-4 max-h-60 overflow-auto">
+                @for (code of recoveryCodes(); track code; let i = $index) {
+                    <div class="font-mono text-sm py-1">
+                        {{ i + 1 }}. {{ code }}
+                    </div>
+                }
+            </div>
+
+            <div class="flex gap-2 justify-center mb-4">
+                <button matButton="outlined" (click)="downloadRecoveryCodes()">
+                    <mat-icon>download</mat-icon>
+                    다운로드
+                </button>
+                <button matButton="outlined" (click)="copyRecoveryCodes()">
+                    <mat-icon>content_copy</mat-icon>
+                    복사
+                </button>
+            </div>
+
+            <button matButton="filled"
+                    color="primary"
+                    (click)="complete()"
+                    class="w-full">
+                <mat-icon>check_circle</mat-icon>
+                완료
+            </button>
+        </div>
+    }
+
+</mat-dialog-content>
+

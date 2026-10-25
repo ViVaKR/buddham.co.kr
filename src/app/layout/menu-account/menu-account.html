@@ -1,0 +1,36 @@
+@if (currentUser(); as user) {
+<img id="avatarButton"
+     type="button"
+     class="size-14 object-contain rounded-full border-2 border-slate-400/50 cursor-pointer"
+     [src]="avatar()"
+     [matMenuTriggerFor]="menuRef"
+     [alt]="user.pseudonym">
+}
+
+<mat-menu #menuRef="matMenu" class="mt-5 bg-slate-200/80 flex flex-col gap-2">
+
+  <!-- ✅ 상단에 프로필 헤더 추가 → 클릭하면 프로필 홈으로 -->
+  @if (currentUser(); as user) {
+  <div
+       (click)="goTo('/Account/mandala')"
+       class="px-4 py-2 flex items-center gap-3 cursor-pointer border-b border-slate-300">
+    <img [src]="avatar()"
+         class="size-8 rounded-full"
+
+         [alt]="user.pseudonym">
+    <div class="flex flex-col">
+      <span class="text-sm font-bold">{{ user.pseudonym }}</span>
+      <span class="text-xs text-slate-500">{{ user.email }}</span>
+    </div>
+  </div>
+  }
+
+  <!-- 메뉴 목록 -->
+  @for (item of accountGroup(); track $index) {
+
+  <button mat-menu-item (click)="item.action ? item.action() : goTo(item.url)">
+    <mat-icon fontSet="material-icons-outlined">{{ item.icon }}</mat-icon>
+    <span>{{ item.title }}</span>
+  </button>
+  }
+</mat-menu>

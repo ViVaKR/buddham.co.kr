@@ -1,0 +1,20 @@
+<body-layout>
+  <title-layout [title]="title" [color]="color" />
+  <div content>
+    <cursor-accordion-table
+                            [isThreadMode]="true"
+                            [threadConfig]="threadConfig"
+                            [cols]="columns()"
+                            [data]="service.items()"
+                            [hasMore]="service.hasMore()"
+                            [isLoading]="service.isLoading()"
+                            [totalCount]="service.totalCount()"
+                            [enableInfiniteScroll]="true"
+                            [detailUrl]="detailUrl"
+                            [isServerSearchActive]="service.isLoading() && !!service.query().searchKeyword"
+                            (loadMore)="service.loadMore()"
+                            (currentData)="onReceiveData($event)"
+                            (searchChange)="service.search($event)">
+    </cursor-accordion-table>
+  </div>
+</body-layout>

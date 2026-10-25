@@ -1,0 +1,106 @@
+<div class="flex flex-col min-h-96 h-auto gap-4 p-4 max-w-3xl mx-auto">
+
+  <!-- 대화 내용 피드 (자동 스크롤 영역) -->
+  <div #scrollArea
+       (scroll)="onScroll(scrollArea)"
+       class="flex-1 bg-slate-50 border border-slate-200
+       scrollbar rounded-lg p-4 overflow-y-auto
+       whitespace-pre-wrap shadow-inner relative">
+
+    <!-- 1. AI가 고뇌하는 동안 보여주는 티라노 UX 레이아웃 -->
+    @if (isStreaming() && isThinking()) {
+    <div class="flex flex-col items-center justify-center h-full text-center text-slate-500 animate-pulse py-8">
+      <div class="mb-4 text-xl">🧘‍♂️</div>
+      <div class="progress-container">
+        <div class="status-bar-inner"></div>
+      </div>
+      <p class="font-medium text-sm text-indigo-600 mb-2">법등 스님이 가사 장삼을 정돈하고 계십니다...</p>
+      <p class="text-xs text-slate-400 italic">" {{ currentWisdom() }} "</p>
+    </div>
+    }
+
+    <!-- 2. 실제 답변이 쏟아져 나오는 영역 -->
+    @if (answer()) {
+    <div class="text-slate-800 leading-relaxed text-base">
+      {{ answer() }}
+      @if (isStreaming() && !isThinking()) {
+      <span class="inline-block w-2 h-4 bg-indigo-500 animate-ping ml-1">▌</span>
+      }
+    </div>
+    }
+
+    <!-- 3. 에러 발생 시 처리 -->
+    @if (error()) {
+    <div class="mt-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-md text-sm">
+      ⚠️ {{ error() }}
+    </div>
+    }
+  </div>
+
+  <!-- 디버깅 상태 로그 -->
+  <p class="text-[10px] text-slate-400 font-mono text-center">
+    Streaming: {{ isStreaming() }} | Thinking: {{ isThinking() }}
+  </p>
+
+  <!-- 질문창 -->
+  <div class="flex flex-col w-full shrink-0">
+    <div class="content-center text-center h-auto">
+      <button matIconButton (click)="copyAll()" [disabled]="aiStream.loading() || isStreaming()">
+        <mat-icon class="cursor-copy">content_copy</mat-icon>
+      </button>
+    </div>
+    <mat-form-field appearance="outline">
+      <mat-label>법등에게 질문하세요...</mat-label>
+      <textarea
+                matInput
+                cdkTextareaAutosize
+                cdkAutosizeMinRows="3"
+                cdkAutosizeMaxRows="10"
+                spellcheck="false"
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="off"
+                tabIndent
+                [(ngModel)]="question"
+                (keydown)="onKeydown($event)"
+                [disabled]="aiStream.loading()"></textarea>
+      <mat-icon matPrefix>sticky_note_2</mat-icon>
+      @if (!aiStream.loading()) {
+      <mat-icon matSuffix (click)="ask(sessionId)" class="cursor-pointer text-slate-600">send</mat-icon>
+      }
+      @if (aiStream.loading()) {
+      <mat-icon matSuffix (click)="stop()" class="cursor-pointer text-red-500">stop</mat-icon>
+      }
+    </mat-form-field>
+  </div>
+</div>
+
+<!-- 하단 제어 및 입력 창 디자인 (예시 인터페이스) -->
+<div class="flex justify-center items-center gap-4">
+
+  @if(connected()) {
+  <button type="button" matButton
+          class="px-4 py-2 bg-slate-200 cursor-pointer hover:bg-slate-300 rounded text-sm transition"
+          (click)="onConnect()"> 연결 </button>
+
+  }@else {
+  <button type="button" matbutton
+          class="px-4 py-2 bg-slate-200 cursor-pointer hover:bg-slate-300 rounded text-sm transition"
+          (click)="onClose()"> 끊기 </button>
+  }
+  <p class="text-lg text-slate-500">
+    {{ connected() }}
+  </p>
+
+  <button matButton="outlined"
+          class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded text-sm transition disabled:opacity-50"
+          (click)="newConnect()"
+          [disabled]="isStreaming()">
+    새로운 연결
+  </button>
+
+  @if (isStreaming()) {
+  <button matButton class="px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white rounded text-sm transition"
+          (click)="stop()">중단</button>
+  }
+</div>

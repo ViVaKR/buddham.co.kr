@@ -1,0 +1,158 @@
+<body-layout>
+  <title-layout [title]="title" [color]="color" />
+
+  <div content class="w-full flex justify-center">
+
+    <form (ngSubmit)="onSubmit($event)"
+          #formDirective="ngForm"
+          class
+          [formGroup]="form"
+          class="p-8 flex flex-col md:w-160 gap-1">
+
+      <div class="grid grid-cols-2 gap-2">
+
+        <!-- 역할이름 (영) -->
+        <mat-form-field appearance="outline">
+          <mat-label>역할이름(영)</mat-label>
+          <input matInput
+                 placeholder="역할"
+                 [errorStateMatcher]="matcher"
+                 formControlName="name">
+          <mat-icon matPrefix>badge</mat-icon>
+          <mat-hint> 역할명은 영문입니다. </mat-hint>
+
+          @if(isPending('name')) { <mat-spinner matSuffix [diameter]="18" class="mr-2"></mat-spinner>}
+          @if(hasError('name', 'required')){ <mat-error>역할이름은 필수 항목입니다.</mat-error> }
+          @if(hasError('name', 'nameTaken')) { <mat-error>이미 등록된 역할입니다.</mat-error>}
+          @if(hasError('name', 'pattern')) { <mat-error>오직 영문(대소문자)만 입력할 수 있습니다.</mat-error>}
+          @if(hasError('name','minlength')) {
+          <mat-error>
+            이름은 {{ form.get('name')?.getError('minlength')?.requiredLength }}자 이상이어야 합니다.
+            (현재 {{ form.get('name')?.getError('minlength')?.actualLength }}자)
+          </mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>별칭</mat-label>
+          <input matInput
+                 [errorStateMatcher]="matcher"
+                 formControlName="koName"
+                 placeholder="별칭">
+          <mat-icon matPrefix>badge</mat-icon>
+          <mat-hint>별칭은 가급적 한글로 작성하여 주세요!</mat-hint>
+          @if(hasError('koName', 'required')) { <mat-error>역할 별칭은 필수요소입니다.</mat-error> }
+          @if(hasError('koName', 'minlength')) {
+          <mat-error>
+            별칭은 {{ form.get('name')?.getError('minlength')?.requiredLength }}자 이상이어야 합니다.
+            (현재 {{ form.get('name')?.getError('minlength')?.actualLength }}자)
+          </mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <mat-form-field appearance="outline">
+          <mat-label>순서</mat-label>
+          <input matInput
+                 [errorStateMatcher]="matcher"
+                 formControlName="sortOrder"
+                 placeholder="순서">
+          <mat-icon matPrefix>badge</mat-icon>
+          <mat-hint>역할 권한 순서</mat-hint>
+          @if(hasError('sortOrder', 'required')) {}
+        </mat-form-field>
+
+        <div class="w-full flex justify-center flex-col gap-0 items-center">
+          <mat-slide-toggle
+                            labelPosition="after"
+                            formControlName="isSystem">
+            {{ form.get('isSystem')?.value ? '시스템 역할' : '일반 역할'}}
+          </mat-slide-toggle>
+
+          <mat-hint>역할 구분</mat-hint>
+        </div>
+      </div>
+
+      <mat-form-field appearance="outline">
+        <mat-label>설명</mat-label>
+        <textarea matInput required tabIndent
+                  cdkTextareaAutosize
+                  rows="3"
+                  (keydown.enter)="$event.stopPropagation()"
+                  spellcheck="false"
+                  autocomplete="off"
+                  autocorrect="off"
+                  autocapitalize="off"
+                  formControlName="description"></textarea>
+        <mat-icon matPrefix>badge</mat-icon>
+        <mat-hint>역할설명</mat-hint>
+        @if(hasError('description', 'required')) { <mat-error>역할 설명은 필수요소입니다.</mat-error> }
+        @if(hasError('description', 'minlength')) {
+        <mat-error>
+          설명글은 {{ form.get('description')?.getError('minlength')?.requiredLength }}자 이상이어야 합니다.
+          (현재 {{ form.get('description')?.getError('minlength')?.actualLength }}자)
+        </mat-error>
+        }
+        @if(hasError('description', 'maxlength')) {
+        <mat-error>
+          설명글은 {{ form.get('description')?.getError('maxlength')?.requiredLength }}자 이하이어야 합니다.
+          (현재 {{ form.get('description')?.getError('maxlength')?.actualLength }}자)
+        </mat-error>
+        }
+      </mat-form-field>
+
+      <div class="flex justify-center items-center gap-4 mt-2 p-4">
+
+        <button matButton="elevated"
+                type="button"
+                class="w-2/3 py-6 text-base font-bold flex
+                disabled:opacity-50 disabled:cursor-not-allowed
+                transition-all duration-300"
+                (click)="onDelete($event)"
+                [disabled]="form.invalid || form.pending || service.isMutating()">
+
+          <div class="flex flex-row gap-4 justify-evenly items-center h-full w-full">
+            @if (service.isMutating()) {
+            <mat-spinner [diameter]="24" class="inline-block mr-2"></mat-spinner>
+            <span> 삭제 중...</span>
+            } @else {
+            <span> 역할 삭제 </span>
+            }
+          </div>
+        </button>
+
+        <button matButton="elevated"
+                type="submit"
+                class="w-2/3 py-6 text-base font-bold flex
+                disabled:opacity-50 disabled:cursor-not-allowed
+                transition-all duration-300"
+                [disabled]="form.invalid || form.pending || service.isMutating()">
+
+          <div class="flex flex-row gap-4 justify-evenly items-center h-full w-full">
+            @if (service.isMutating()) {
+            <mat-spinner [diameter]="24" class="inline-block mr-2"></mat-spinner>
+            <span> 수정 중...</span>
+            } @else {
+            <span> {{ isEditMode() ? '역할 수정' : '역할 추가'}}</span>
+            }
+          </div>
+
+        </button>
+
+      </div>
+
+    </form>
+  </div>
+</body-layout>
+
+
+
+
+<!--
+    @if(data()) {
+    <pre> {{ data() | json}} </pre>
+    }
+    <p>[ {{ result()}} ]</p>
+
+-->

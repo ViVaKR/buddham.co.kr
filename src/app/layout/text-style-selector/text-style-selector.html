@@ -1,0 +1,26 @@
+<div class="grid grid-cols-[1fr_135px_135px] max-md:grid-cols-1 gap-2 w-full">
+
+  <font-selector
+                 [selectedFont]="font()"
+                 (fontChanged)="onFontChanged($event)">
+  </font-selector>
+
+  <font-size-selector
+                      [selectedSize]="size()"
+                      [minSize]="9"
+                      [maxSize]="72"
+                      (fontSizeChanged)="onFontSizeChanged($event)"
+                      (resizeRequested)="triggerResize()">
+  </font-size-selector>
+
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>줄간격</mat-label>
+    <mat-select [value]="lineSpace()" (selectionChange)="onChangeLineSpace($event)">
+      @for (item of lineSpaceOptions; track item) {
+      <mat-option [value]="item">{{ item }}배</mat-option>
+      }
+    </mat-select>
+    <mat-icon matPrefix fontSet="material-icons-outlined">height</mat-icon>
+  </mat-form-field>
+
+</div>

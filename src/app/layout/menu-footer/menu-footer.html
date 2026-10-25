@@ -1,0 +1,31 @@
+<footer class="flex flex-col main-footer justify-center items-center
+              w-full h-auto py-16 mb-56 gap-8 font-noto
+              bg-golden-yellow text-warm-brown
+              shadow-[inner_0_2px_10px_rgba(0,0,0,0.05)] border-t border-[#d4a373]">
+
+  <!-- 아이콘과 텍스트의 간격을 벌려 더 시원하게 배치 -->
+  <div class="flex flex-row gap-12 w-full text-slate-200 h-auto justify-center items-center">
+    <button matButton (click)="navigator.to('Privacy')" class="hover:opacity-70 transition-all text-blue-900/75">
+      <mat-icon class="mr-2">policy</mat-icon>
+      <span class="font-medium">개인정보 처리방침</span>
+    </button>
+    <button matButton (click)="navigator.to('TermsOfService')" class="hover:opacity-70 transition-all">
+      <mat-icon class="mr-2">gavel</mat-icon> <!-- 이용약관에 어울리는 망치 아이콘으로 변경 제안 -->
+      <span class="font-medium">이용약관</span>
+    </button>
+    <button matButton (click)="navigator.to('Cookie')" class="hover:opacity-70 transition-all">
+      <mat-icon class="mr-2">cookie</mat-icon>
+      <span class="font-medium">쿠키정책</span>
+    </button>
+  </div>
+
+  <!-- 구분선 하나로 디자인의 완성도를 높임 -->
+  <div class="w-24 h-px bg-[#7f5539] opacity-20"></div>
+
+  <p class="w-full text-center text-warm-brown opacity-60 tracking-widest text-sm">
+    &#169; {{ year }} **KIM BUM JUN**. All rights reserved.
+    <br>
+    <span class="text-xs italic">Crafted with compassion and mindfulness.</span>
+  </p>
+
+</footer>

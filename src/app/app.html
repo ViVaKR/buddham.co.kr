@@ -1,0 +1,36 @@
+<div class="w-full flex flex-col">
+
+  <div [hidden]="outletData().showHeader === false" class="w-full shrink-0">
+    <menu-bar />
+  </div>
+
+  <div id="bodyTopAnchor"></div>
+  @if(showbar()) {
+  <div class="app-nav-showbar shrink-0">
+    <a type="button" class="cursor-pointer flex items-center" (click)="toggleMenu()">
+      <mat-icon [fontIcon]="showleft() ? 'menu_open' : 'menu'"></mat-icon>
+    </a>
+
+    <menu-breadcrumb />
+    <div class="size-4 flex items-center bg-sky-400/20"></div>
+  </div>
+  }
+
+  <main class="flex-1 min-h-0">
+    <router-outlet
+                   [routerOutletData]="outletData()"
+                   (activate)="outletEvent.onActivate($event)"
+                   (deactivate)="outletEvent.onDeactivate($event)" />
+  </main>
+  <div id="bodyBottomAnchor"></div>
+
+  <footer class="relative w-full shrink-0 main-footer">
+    @if(showfooter()) {
+    <menu-footer />
+    }@else { }
+
+  </footer>
+
+</div>
+
+@if(loading()) { <menu-loading [active]="(loading()) ?? false" /> }

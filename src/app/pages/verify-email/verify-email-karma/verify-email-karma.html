@@ -1,0 +1,39 @@
+<body-layout>
+    <div content class="w-full h-full flex flex-col items-center p-4 gap-4">
+
+        <form (ngSubmit)="onSubmit($event)" novalidate
+              [formGroup]="form"
+              #formDirective="ngForm"
+              (keydown.enter)="$event.preventDefault()"
+              class="w-120 flex justify-center mt-8 flex-col gap-1 px-8">
+
+            <mat-form-field appearance="outline">
+                <mat-label>Email</mat-label>
+                <input type="email" matInput formControlName="email"
+                       class="text-xl w-full text-sky-800/75 text-center font-bold">
+
+                @if (hasError('email', 'required')) {
+                    <mat-error>이메일은 필수 항목입니다.</mat-error>
+                }
+                @if (hasError('email', 'email')) {
+                    <mat-error>올바른 이메일 형식이 아닙니다.</mat-error>
+                }
+
+                <mat-hint class="font-bold text-slate-300">
+                    가입 이메일이 수신이 가능하신지 확인 후 전송하시기 바랍니다.
+                </mat-hint>
+
+            </mat-form-field>
+
+            <div class="w-full flex flex-col my-2 justify-center items-center">
+                <button matButton="outlined" [disabled]="loading()">
+                    <mat-icon>send</mat-icon>
+                    {{ loading() ? '전송중...' : '인증 메일 보내기' }}
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</body-layout>
+

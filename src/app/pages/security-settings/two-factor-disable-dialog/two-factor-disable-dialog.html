@@ -1,0 +1,30 @@
+<h2 mat-dialog-title class="flex items-center gap-2">
+    <mat-icon class="text-amber-600">warning</mat-icon>
+    2단계 인증 해제
+</h2>
+
+<mat-dialog-content>
+    <div class="bg-amber-50 border-l-4 border-amber-500 p-4 mb-4">
+        <p class="text-amber-900 font-semibold mb-2">정말 2단계 인증을 해제하시겠습니까?</p>
+        <p class="text-sm text-amber-700">
+            2단계 인증을 해제하면 계정 보안이 약해집니다.
+            비밀번호만으로 로그인이 가능해집니다.
+        </p>
+    </div>
+
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-2">
+        <li>저장된 인증 키가 삭제됩니다</li>
+        <li>복구 코드가 무효화됩니다</li>
+        <li>다음 로그인부터 인증 코드가 필요하지 않습니다</li>
+    </ul>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="gap-2">
+    <button mat-button (click)="cancel()">
+        취소
+    </button>
+    <button mat-raised-button color="warn" (click)="confirm()">
+        <mat-icon>cancel</mat-icon>
+        해제하기
+    </button>
+</mat-dialog-actions>

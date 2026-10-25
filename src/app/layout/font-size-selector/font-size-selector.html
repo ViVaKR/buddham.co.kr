@@ -1,0 +1,11 @@
+<mat-form-field appearance="outline" class="w-full">
+  <mat-label>Font Size</mat-label>
+  <mat-select
+              [value]="selectedSize()"
+              (selectionChange)="onSizeChange($event.value)">
+    @for (item of fontOptions(minSize(), maxSize()); track $index) {
+    <mat-option [value]="item">{{ item }}</mat-option>
+    }
+  </mat-select>
+  <mat-icon matPrefix>format_size</mat-icon>
+</mat-form-field>

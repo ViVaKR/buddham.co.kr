@@ -1,0 +1,114 @@
+<div
+     (mousemove)="onMouseMove($event)"
+     class="relative flex flex-col min-h-screen w-full
+            justify-center items-center overflow-hidden">
+
+  <div class="petal-container">
+
+    <div class="dev-badge group">
+      <div class="seal-box">
+        <span class="status-dot"></span>
+        <p class="text-[10px] tracking-[0.2em] mb-1 opacity-70">CURRENT STATUS</p>
+        <p class="text-xs tracking-widest font-bold">사이버 법당 중창 불사 중</p>
+        <div
+             class="hidden group-hover:block mt-2 pt-2 border-t border-yellow-700/30 text-[9px] text-slate-300 leading-relaxed text-center">
+          기본 기능은 작동하나<br>
+          경전 및 법문 데이터 보완 중입니다.
+        </div>
+      </div>
+    </div>
+    @for (petal of petals(); track petal.id) {
+    <div class="petal"
+         [style.left.px]="petal.x"
+         [style.top.px]="petal.y"
+         [style.transform]="'rotate(' + petal.rotation + 'deg) scale(' + petal.scale + ')'"
+         [style.animationDelay.ms]="petal.delay">
+    </div>
+    }
+  </div>
+
+  <div #mathContainer
+       [matTooltip]="'이것이 있어 저것이 있네! 길 따라 시공이 굽어지니 우리의 인연도 그러하리... 🙏'"
+       [matTooltipPosition]="'left'"
+
+       class="cursor-pointer p-6 min-h-12.5 flex translate-y-24
+       hover:text-white
+       items-center justify-center text-slate-400/50 z-100">
+  </div>
+
+  <div class="absolute inset-0 bg-alone bg-no-repeat
+              bg-center bg-cover opacity-95 pointer-events-none">
+  </div>
+
+  <div
+       class="bg-lotus bg-no-repeat bg-center bg-cover absolute
+       top-5/6 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-10 z-15 w-80 h-80">
+  </div>
+
+  @if(message()) {
+  <div [style.fontSize]="fontSize()" class="floating-text-container font-cute z-30">
+    @for (item of message(); track item.key) {
+    <span class="floating-char" [style.animationDelay]="item.delay + 'ms'">{{ item.char }}</span>
+    }
+  </div>
+  }
+
+  <div class="folders z-50">
+    @for (group of folders; track group.items[0] ) {
+    <div class="folder" [ngClass]="group.class" [matTooltip]="group.tooltip">
+      @for (menu of group.items; track $index) {
+      <a class="file cursor-pointer" [routerLink]="'/' + [menu.url]">
+        <span class="font-poppins">{{ menu.name }}</span>
+      </a>
+      }
+    </div>
+    }
+  </div>
+
+  <button type="button"
+          (click)="goTo()"
+          class="z-50 text-base font-ibm
+          max-xl:bottom-[50%] mt-10 hover:text-rose-100
+          transition-colors"> 사경(寫經)
+  </button>
+
+  <footer class="fixed bottom-0 w-full px-10 pb-6 text-slate-400 font-cute footer-container">
+
+    <div class="w-full h-px bg-linear-to-r from-transparent
+    via-slate-600 to-transparent opacity-30 mb-6"></div>
+
+    <div class="grid grid-cols-2 items-center justify-between w-full mb-4">
+
+      <div class="flex flex-col items-start justify-center group">
+        <p class="welcome-text mb-1">
+          {{ currentWelcome() }}
+        </p>
+        <p class="ip-text text-sm md:text-base opacity-60 group-hover:opacity-100 transition-opacity">
+          <span class="text-[10px] uppercase tracking-[0.3em] mr-2 opacity-50 font-sans">
+            Access Point
+          </span>
+          {{ publicIp()?.ip ?? '0.0.0.0'}}
+        </p>
+      </div>
+
+      <div class="flex justify-end overflow-hidden">
+        <p class="quote-text italic font-ibm text-xs tracking-wider text-right max-w-[80%]"
+           [class.opacity-0]="!isVisible()"
+           [class.opacity-100]="isVisible()"
+           [class.glowing]="isQuoteGlowing()">
+          <span class="text-rose-200/20 mr-1">“</span>
+          {{ currentQuote().text }}
+          <span class="text-rose-200/20 ml-1">”</span>
+        </p>
+      </div>
+
+    </div>
+
+    <div class="flex justify-center items-center gap-3 opacity-40 text-[11px] tracking-[0.5em]">
+      <span class="h-px w-8 bg-slate-500"></span>
+      <p>DIGITAL DHARMA TRANSCRIPTION SERVICE</p>
+      <span class="h-px w-8 bg-slate-500"></span>
+    </div>
+  </footer>
+
+</div>

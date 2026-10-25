@@ -1,0 +1,180 @@
+<body-layout>
+  <title-layout [title]="base.outletData().title!" />
+
+  <div content
+       class="min-h-screen flex items-center justify-center p-4">
+    <!-- 명상 방석처럼 부드럽고 안정감 있는 카드 -->
+    <div class="w-full max-w-xl bg-white
+                    rounded-4xl shadow-xl -translate-y-8
+                    overflow-hidden border border-stone-200">
+      <!-- 상단 헤더: 하늘색과 금색의 조화 -->
+      <div class="bg-linear-to-b from-red-400 to-red-800
+                        p-8 text-center text-white relative">
+
+        <!-- 배경 연꽃 무늬 은은하게 (선택사항) -->
+        <mat-icon svgIcon="logo-64"
+                  class="size-16 mx-auto mb-4 drop-shadow-md text-amber-200"></mat-icon>
+        <h2 class="text-3xl font-semibold tracking-widest text-amber-100 font-noto">
+          발심 (發心)
+        </h2>
+        <p class="text-sky-100 mt-2 text-sm">정토사경과 함께할 첫걸음을 내딛습니다</p>
+      </div>
+
+      <!-- form -->
+      <form (ngSubmit)="onSubmit($event)"
+            #formDirective="ngForm"
+            [formGroup]="form"
+            class="p-8 flex flex-col gap-1">
+
+        <!-- 이메일 (email) -->
+        <mat-form-field appearance="fill" class="w-full">
+
+          <mat-label>아이디 (이메일)</mat-label>
+          <input matInput
+                 [errorStateMatcher]="matcher"
+                 required
+                 placeholder="이메일"
+                 formControlName="email">
+          <mat-icon matPrefix fontSet="material-icons-outlined">email
+          </mat-icon>
+
+          @if (form.get('email')?.pending) {
+          <mat-spinner matSuffix [diameter]="18" class="mr-2"></mat-spinner>
+          }
+          @if (hasError('email', 'required')) {
+          <mat-error>이메일은 필수 항목입니다.</mat-error>
+          }
+          @if (hasError('email', 'email')) {
+          <mat-error>올바른 이메일 형식이 아닙니다.</mat-error>
+          }
+          @if (hasError('email', 'emailTaken')) {
+          <mat-error>이미 사용중인 이메일입니다.</mat-error>
+          }
+
+        </mat-form-field>
+
+        <!-- 이름 (fullName)-->
+        <mat-form-field appearance="fill" class="w-full">
+
+          <mat-label>이름</mat-label>
+          <input matInput placeholder="이름"
+                 [errorStateMatcher]="matcher"
+                 formControlName="fullName">
+          <mat-icon matPrefix fontSet="material-icons-outlined">badge
+          </mat-icon>
+          <mat-hint class="text-sky-600"> 실명 보다는 법명 또는 불명을 추천합니다.</mat-hint>
+          @if (hasError('fullName', 'required')) {
+          <mat-error>이름은 필수 항목입니다.</mat-error>
+          }
+          @if (hasError('fullName', 'minlength')) {
+          <mat-error>
+            이름은 {{ form.get('fullName')?.getError('minlength')?.requiredLength }}자 이상이어야 합니다.
+            (현재 {{ form.get('fullName')?.getError('minlength')?.actualLength }}자)
+          </mat-error>
+          }
+        </mat-form-field>
+
+        <!-- 필명 (pseudonym) -->
+        <mat-form-field appearance="fill" class="w-full mt-4">
+          <mat-label>필명</mat-label>
+          <input matInput placeholder="닉네임"
+                 [errorStateMatcher]="matcher"
+                 formControlName="pseudonym">
+          <mat-icon matPrefix fontSet="material-icons-outlined">book
+          </mat-icon>
+
+          <!-- 로딩 스피너 (검사 중일 때) -->
+          @if (form.get('pseudonym')?.pending) {
+          <mat-spinner matSuffix [diameter]="18" class="mr-2"></mat-spinner>
+          }
+          @if (form.get('pseudonym')?.pending) {
+          <mat-hint class="text-sky-700">중복여부를 확인 중입니다...</mat-hint>
+          }
+          @if (hasError('pseudonym', 'required')) {
+          <mat-error>필명은 필수 항목입니다.</mat-error>
+          }
+          @if (hasError('pseudonym', 'minlength')) {
+          <mat-error>
+            필명은 {{ form.get('pseudonym')?.getError('minlength')?.requiredLength }}자 이상이어야 합니다.
+            (현재 {{ form.get('pseudonym')?.getError('minlength')?.actualLength }}자)
+          </mat-error>
+          }
+          @if (hasError('pseudonym', 'pseudonymTaken')) {
+          <mat-error>이미 사용 중인 필명입니다.</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- 비밀번호 (password) -->
+        <mat-form-field appearance="fill" class="w-full mt-2">
+          <mat-label>비밀번호</mat-label>
+          <input matInput
+                 [errorStateMatcher]="matcher"
+                 required
+                 type="{{hidePassword() ? 'password' : 'text' }}"
+                 placeholder="로그인 비밀번호 (6자 이상)"
+                 formControlName="password">
+          <mat-icon matPrefix fontSet="material-icons-outlined">lock
+          </mat-icon>
+          <mat-icon (click)="togglePassword($event)" matSuffix class="cursor-pointer">
+            {{ hidePassword() ? 'visibility_off' : 'visibility' }}
+          </mat-icon>
+          @if (hasError('password', 'required')) {
+          <mat-error>비밀번호는 필수 항목입니다.</mat-error>
+          }
+          @if (hasError('password', 'minlength')) {
+          <mat-error>비밀번호는 6자 이상이어야 합니다.</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- 비밀번호 확인 (confirmPassword) -->
+        <mat-form-field appearance="fill" class="w-full">
+          <mat-label>비밀번호 확인</mat-label>
+          <input matInput
+                 [errorStateMatcher]="matcher"
+                 type="{{hidePassword() ? 'password' : 'text' }}"
+                 placeholder="비밀번호 확인"
+                 formControlName="confirmPassword">
+          <mat-icon matPrefix fontSet="material-icons-outlined">lock
+          </mat-icon>
+
+          <mat-icon (click)="togglePassword($event)" matSuffix class="cursor-pointer">
+            {{ hidePassword() ? 'visibility_off' : 'visibility' }}
+          </mat-icon>
+
+          @if (form.hasError('passwordMismatch') && form.get('confirmPassword')?.dirty &&
+          form.get('confirmPassword')?.touched) {
+          <mat-error> 비밀번호가 서로 일치하지 않습니다.</mat-error>
+          }
+
+        </mat-form-field>
+
+        <div class="flex flex-row justify-evenly gap-4 items-center mt-2">
+
+          <button matButton="elevated"
+                  type="button"
+                  [disabled]="form.pristine"
+                  class="disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+                  (click)="onReset()">
+            초기화
+          </button>
+
+          <button matButton="tonal"
+                  type="submit"
+                  [disabled]="form.invalid || form.pending"
+                  class="w-2/3 py-6 text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300">
+            가입하기
+          </button>
+        </div>
+
+        <button matButton (click)="goToLogin()"
+                class="flex justify-center text-slate-400 hover:text-sky-600
+                cursor-pointer mt-6 w-full text-sm font-medium transition-colors">
+          이미 인연을 맺으셨나요? 로그인
+        </button>
+      </form>
+
+    </div>
+
+  </div>
+  s
+</body-layout>

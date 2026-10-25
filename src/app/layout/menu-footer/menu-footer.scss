@@ -1,0 +1,32 @@
+.main-footer {
+    font-family: 'Noto Serif KR', serif;
+    /* 부드러운 서체 추천 */
+}
+
+.bg-golden-yellow {
+    background-color: #f7d794;
+    /* 따뜻한 금색 */
+}
+
+.text-warm-brown {
+    color: #7f5539;
+    /* 차분한 갈색 */
+}
+
+/* 마우스 오버 효과 (옵션) */
+.main-footer button:hover {
+    background-color: #e6be6a;
+    /* 조금 더 짙은 금색 */
+    color: white;
+}
+
+/* 추가 디테일 (옵션) */
+.main-footer mat-icon {
+    font-size: 20px;
+    /* 아이콘 크기 조절 */
+}
+
+.main-footer p {
+    font-size: 14px;
+    /* 저작권 문구 크기 조절 */
+}

@@ -1,0 +1,107 @@
+<body-layout>
+  <title-layout [title]="title" [color]="color" [icon]="base.outletData().icon!" />
+  <div content class="flex flex-col items-center min-h-screen rounded-2xl
+            justify-start w-full p-8
+            transition-all duration-700">
+
+    <form (ngSubmit)="onSubmit($event)"
+          [formGroup]="form"
+          #formDirective="ngForm"
+          class="login-form bg-amber-50">
+
+      <!-- 자비와 평화를 상징하는 장식 -->
+      <div
+           class="w-20 h-20 rounded-full bg-amber-100/60 flex items-center
+         justify-center mb-6 shadow-inner text-amber-600 transition-transform hover:scale-110 duration-500">
+        <mat-icon fontSet="material-icons-outlined" class="scale-[2]">spa</mat-icon>
+      </div>
+
+      <!-- 제목 -->
+      <div class="text-3xl mb-2 text-amber-900 font-bold font-note text-center tracking-wider">
+        {{ title }}
+      </div>
+
+      <div class="text-sm mb-10 text-amber-700/70 text-center font-light">
+        마음의 평화를 찾는 여정에 오신 것을 환영합니다.
+      </div>
+
+      <!-- 이메일 (email) -->
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>이메일 (아이디)</mat-label>
+        <input matInput required
+               class="font-bold text-teal-800 font-poppinss"
+               [errorStateMatcher]="matcher"
+               formControlName="email">
+        <mat-icon matPrefix fontSet="material-icons-outlined" class="text-amber-700/60 mr-2 ml-1">email
+        </mat-icon>
+        @if (hasError('email', 'required')) {
+        <mat-error>이메일은 필수 항목입니다.</mat-error>
+        }
+        @if (hasError('email', 'email')) {
+        <mat-error>올바른 이메일 형식이 아닙니다.</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- 비밀번호 (password) -->
+      <mat-form-field appearance="outline" class="w-full mt-2">
+        <mat-label>비밀번호</mat-label>
+        <input matInput required min="6" type="{{hidePassword() ? 'password' : 'text' }}"
+               lass="font-poppins font-bold text-teal-800"
+               autocomplete="off"
+               required
+               minlength="6"
+               [errorStateMatcher]="matcher"
+               formControlName="password">
+        <mat-icon matPrefix fontSet="material-icons-outlined"
+                  class="text-amber-700/60 mr-2 ml-1">lock_outline
+        </mat-icon>
+        <mat-icon fontSet="material-icons-outlined" (click)="togglePassword($event)" matSuffix
+                  class="cursor-pointer text-amber-600/60 hover:text-amber-800 transition-colors">
+          {{ hidePassword() ? 'visibility_off' : 'visibility' }}
+        </mat-icon>
+        @if (hasError('password', 'required')) {
+        <mat-error>비밀번호는 필수 항목입니다.</mat-error>
+        }
+        @if(hasError('password', 'minlength')) {
+        <mat-error>비밀번호는 6자 이상입니다.</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- 아이피 주소 (ipAddress) -->
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>아이피 정보</mat-label>
+        <input matInput required placeholder="아이피 정보" formControlName="ipAddress">
+        <mat-icon matPrefix fontSet="material-icons-outlined" class="text-amber-700/60 mr-2 ml-1">info
+        </mat-icon>
+      </mat-form-field>
+
+      <div class="flex flex-col w-full gap-4 mt-6">
+
+        <!-- 로그인 버튼 -->
+        <button matButton="elevated" type="submit"
+                class="w-full bg-amber-600 text-white shadow-sm/20 transition-all hover:shadow-lg">
+          <div class="flex items-center justify-center gap-2">
+            <mat-icon fontSet="material-icons-outlined">login</mat-icon>
+            <span>로그인</span>
+          </div>
+        </button>
+      </div>
+
+      <!-- 하단 링크 -->
+      <div class="flex flex-col items-center justify-center w-full mt-8 pt-6 border-t border-amber-100 gap-2">
+        <button matButton="" type="button" (click)="navigator.to(['ForgotPassword/karma'])"
+                class="text-amber-700/80 hover:text-amber-900 transition-colors font-light text-sm">
+          <span class="flex items-center gap-1">
+            비밀번호를 잊으셨나요?
+          </span>
+        </button>
+        <button matButton type="button" (click)="navigator.to('SignUp/karma')"
+                class="text-amber-700/80 hover:text-amber-900 transition-colors font-light text-sm">
+          <span class="flex items-center gap-1">
+            아직 회원이 아니신가요? <strong class="font-medium ml-1">회원가입</strong>
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</body-layout>

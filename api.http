@@ -1,0 +1,70 @@
+@HOST = https://api.buddham.co.kr
+@email = hello@vivakr.com
+@password = A9037!m8947#
+
+@id = 019d7718-706a-74b9-93e8-9f3eaec2e6c0
+
+### * 로그인
+# @name iam
+
+POST {{HOST}}/Auth/SignIn
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+### * 토큰저장
+@token = {{iam.response.body.content.token}}
+@refreshToken = {{iam.response.body.content.refreshToken}}
+
+### DharmaGuide
+GET {{HOST}}/DharmaGuide/GetListAll
+Content-Type: application/json
+
+### 
+
+GET {{HOST}}/api/AppleSyscall
+Content-Type: application/json
+
+###
+POST {{HOST}}/DharmaGuide/Create
+Content-Type: application/json
+
+{
+  "dharmaGuideCategory": "1",
+  "title": "다섯번 테스트 입니다.",
+  "content": "Dahrma Guide  감사합니다. homebrew 버전으로 테스트합니다.서비스 상태 테스트 글입니다. 안녕하세요! 도반님들의 원할한 이용을 위한 종합안내 서비스를 시작합니다. 많은 이용 바랍니다."
+}
+
+###
+POST /api/embed HTTP/1.1
+Host: 192.168.0.8:11434
+Content-Type: application/json
+
+{
+  "model": "bge-m3",
+  "input": "Why is the sky blue?"
+}
+
+###
+POST /api/chat
+### * Admin Users
+GET {{HOST}}/User/GetListALL
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### * HelpList
+
+GET {{HOST}}/Buddham/GetHelpList
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### * UserRole
+
+GET {{HOST}}/UserRole/GetListAll
+Content-Type: application/json
+
+
+###

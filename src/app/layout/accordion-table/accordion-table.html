@@ -1,0 +1,227 @@
+<div class="flex flex-col gap-2">
+
+  <p class="flex justify-evenly items-center pt-2 text-sky-800/50">
+    <span>❉</span>
+    <span>❉</span>
+  </p>
+
+  <mat-form-field>
+    <mat-label>검색</mat-label>
+    <input matInput (keyup)="applyFilter($event)" #input>
+  </mat-form-field>
+
+  <div class="shadow-xs shadow-slate-800/20">
+    <table mat-table
+           [dataSource]="dataSource"
+           class="mat-elevation-z8"
+           multiTemplateDataRows
+           matSort>
+
+      <!-- 동적 데이터 컬럼 루프 -->
+      @for (col of cols(); track col) {
+      <ng-container matColumnDef="{{ col.key }}">
+
+        <!-- 헤더 -->
+        <th mat-header-cell *matHeaderCellDef
+            [matTooltip]="col.placeHoder"
+            [matTooltipPosition]="'above'"
+            class="text-sky-800 max-md:w-auto"
+            mat-sort-header>
+
+          <span class="line-clamp-1 w-auto" [matTooltip]="col.label" matTooltipPosition="above">
+            {{ col.label }}
+          </span>
+
+        </th>
+
+        <!-- 데이터 행 -->
+        <td mat-cell
+            class="text-sm tracking-tight text-slate-600 border-b-0 font-poppins max-md:w-auto"
+            [class]="[col.width]"
+            *matCellDef="let element">
+
+          @switch (col.pipe) {
+          @case ('date') {
+          <span
+                [matTooltip]="element[col.key]"
+                matTooltipPosition="above"
+                class="line-clamp-1">{{ element[col.key] | date:(col.pipeArgs || 'yyyy-MM-dd') }}</span>
+          }
+          @case ('currency') {
+          <span
+                [matTooltip]="element[col.key]"
+                matTooltipPosition="above"
+                class="line-clamp-1">{{ element[col.key] | currency:(col.pipeArgs || 'KRW') }}</span>
+          }
+          @case ('enum') {
+          <span
+                [matTooltip]="element[col.key] | enumToKey: col.pipeArgs : col.enumType"
+                matTooltipPosition="above"
+                class="line-clamp-1">{{ element[col.key] | enumToKey: col.pipeArgs : col.enumType }}</span>
+          }
+          @case ('truncate') {
+          <span
+                class="line-clamp-1"
+                [matTooltip]="element[col.key]"
+                matTooltipPosition="above">
+            {{ element[col.key]}}
+          </span>
+          }
+          @case ('like') {
+          <button mat-icon-button
+                  (click)="onLikedClick(element); $event.stopPropagation()"
+                  class="scale-75 flex justify-center items-center gap-2"
+                  [class.text-sky-500]="element['isLikedByMe']"
+                  [class.text-slate-400]="!element['isLikedByMe']">
+            <mat-icon>
+              {{ element['isLikedByMe'] ? 'favorite' : 'favorite_border' }}
+            </mat-icon>
+            <span class="text-xs text-slate-500">{{ element['likeCount'] }}</span>
+          </button>
+          }
+          @default {
+          <span [title]="element[col.key]"
+                [matTooltip]="element[col.key]"
+                matTooltipPosition="above"
+                class="line-clamp-1">{{ element[col.key] }}</span>
+          }
+          }
+        </td>
+
+      </ng-container>
+      }
+
+      <!-- expand 컬럼 -->
+      <ng-container matColumnDef="expand">
+        <th mat-header-cell *matHeaderCellDef>&nbsp;</th>
+        <td mat-cell *matCellDef=" let element" class="border-b-0 w-16">
+          <button matIconButton
+                  (click)="toggle(element); $event.stopPropagation()"
+                  class="toggle-button text-slate-400"
+                  [class.toggle-button-expanded]="isExpanded()(element)">
+            <mat-icon>arrow_circle_down</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- 상세 내용 행 -->
+      <!-- * expandedDetail * -->
+      <ng-container matColumnDef="expandedDetail">
+        <td mat-cell *matCellDef="let element"
+            [attr.colspan]="displayedColumsWithExpand().length">
+
+          <div class="grid grid-cols-1 flex-1 transition-all duration-1000 ease-in-out overflow-hidden"
+               [class]="isExpanded()(element) ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'">
+
+            <div [class]="isExpanded()(element) ? 'h-auto': 'min-h-0'"
+                 class="p-0 w-full overflow-y-auto">
+
+              @if (isExpanded()(element) || expandedCache().has(element.id)) {
+              <mat-tab-group animationDuration="300ms">
+
+                @for (item of getTabProperties(element); track $index) {
+                <mat-tab [label]="item.label">
+                  <pre
+                       class="w-full p-8 font-poppins text-slate-600 flex items-start justify-start">{{item.value}}</pre>
+                </mat-tab>
+
+                }
+
+              </mat-tab-group>
+
+              <!-- 상세카드 -->
+              <detail-card [data]="element" [cols]="cols()" />
+
+              <div class="mt-8 flex justify-end gap-3">
+                <button mat-stroked-button color="primary" class="rounded-full" (click)="goTo(element.id)">
+                  <mat-icon>open_in_new</mat-icon>
+                  <span class="ml-1">수정</span>
+                </button>
+              </div>
+
+              <!-- 쓰레드 -->
+              @if(isThreadMode() && threadConfig()) {
+              <reply-board
+                           [rootItem]="$any(element)"
+                           [parentTitle]="$any(element).title"
+                           [fetchRepliesFn]="threadConfig()!.fetchRepliesUrl"
+                           [createCommentFn]="threadConfig()!.createCommentFn"
+                           [createReplyFn]="threadConfig()!.createReplyFn"
+                           [toggleReactionFn]="threadConfig()!.toggleReactionFn"
+                           [getAvatarUrlFn]="threadConfig()!.getAvatarUrlFn" />
+              }
+
+              <!-- 버튼그룹 -->
+              <div class="w-full p-0 justify-evenly mb-4 flex flex-row items-center">
+                <a type="button" (click)="goTo(element.id)" matButton>
+                  <mat-icon fontSet="material-icons-outlined">tab_new_right</mat-icon>
+                  상세읽기 ({{ element.id }})
+                </a>
+              </div>
+              }
+
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- * 상세 내용 행 끝 * -->
+
+      <!-- ! ========== 2단계: 행 템플릿 정의 ========== ! -->
+      <!-- ? 헤더 행  -->
+      <tr mat-header-row
+          *matHeaderRowDef="displayedColumsWithExpand()"
+          class="bg-slate-200/50 text-base font-noto">
+      </tr>
+
+      <!-- ? 일반 데이터 행 -->
+      <tr mat-row *matRowDef="let element; columns: displayedColumsWithExpand();"
+          class="cursor-pointer [&:not(.expanded-row)]:hover:bg-purple-50 hover:bg-sky-50"
+          [class.expanded-row]="isExpanded()(element)"
+          (click)="toggle(element); onRowClick(element);">
+      </tr>
+
+      <!-- ? 확장 데이터 행 -->
+      <tr mat-row *matRowDef=" let row; columns: ['expandedDetail']" class="h-0"> </tr>
+
+      <!-- ! ========== 기타 단계: 데이터 없음 ========== ! -->
+      <tr class="mat-row no-data-row" *matNoDataRow>
+        <td [attr.colspan]="displayedColumsWithExpand().length">
+          <div class="w-full py-16 flex flex-col items-center justify-center gap-3">
+            <mat-icon class="text-amber-300/50 text-6xl w-16 h-16">
+              auto_stories
+            </mat-icon>
+            <p class="text-slate-600 text-base font-noto">
+              표시할 데이터가 없습니다
+            </p>
+            <p class="text-slate-400 text-sm">
+              검색어를 변경하거나 필터를 초기화해보세요
+            </p>
+          </div>
+        </td>
+      </tr>
+    </table>
+    <mat-divider></mat-divider>
+    <mat-paginator
+                   [pageSize]="pageSize()"
+                   showFirstLastButtons
+                   [pageIndex]="currentPage()"
+                   (page)="onPageChange($event)"
+                   [pageSizeOptions]="[5, 10, 15 , 20, 25, 50, 100]"
+                   aria-label="페이지 크기 선택"></mat-paginator>
+
+    @if(hasMore()) {
+    <div class="w-full flex justify-center p-4">
+      <button mat-stroked-button color="primary"
+              (click)="onLoadMore()"
+              [disabled]="isLoading()">
+        @if (isLoading()) {
+        <mat-spinner diameter="20" class="mr-2"></mat-spinner>
+        }
+        더 보기 ({{currentCount()}} / {{totalItems()}})
+      </button>
+    </div>
+    }
+  </div>
+
+</div>

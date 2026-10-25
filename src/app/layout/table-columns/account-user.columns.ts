@@ -1,0 +1,30 @@
+import { signal } from "@angular/core";
+import { IColumnDef } from "@app/core/interfaces/ui/i-column-def";
+
+export const ACCOUNT_USER_COLUMNS = signal<IColumnDef[]>([
+  { key: 'userName', label: '아이디', position: 'sub-header', showInTable: true, showInTab: false, tabOrder: 0 },
+  { key: 'pseudonym', label: '필명', position: 'header', showInTable: true, showInTab: false, tabOrder: 1 },
+  { key: 'fullName', label: '법명', position: 'badge', showInTable: true, showInTab: false, tabOrder: 2 },
+  { key: 'email', label: '이메일', showInTable: true, showInTab: false, tabOrder: 3 },
+  { key: 'id', label: 'ID', position: 'badge', pipe: 'uppercase', showInTable: false, tabOrder: 10 },
+  { key: 'normalizedUserName', label: '표준 아이디', showInTable: false, tabOrder: 11 },
+  { key: 'normalizedEmail', label: '표준 이메일', showInTable: false, tabOrder: 12 },
+  { key: 'avatar', label: '아바타', showInTable: false, pipe: 'truncate', pipeArgs: 10, tabOrder: 13 },
+  { key: 'emailConfirmed', label: '이메일 인증', showInTable: false, tabOrder: 14 },
+  { key: 'accessFailedCount', label: '로그인실패 횟수', showInTable: false, tabOrder: 15 },
+  { key: 'twoFactorEnabled', label: '2단계 인증', showInTable: false, tabOrder: 16 },
+  { key: 'provider', label: '가입경로', showInTable: false, tabOrder: 17 },
+  { key: 'createdAt', label: '가입일자', showInTable: false, pipe: 'date', pipeArgs: 'yyyy-MM-dd hh:mm:ss', tabOrder: 18 },
+  { key: 'updatedAt', label: '수정일자', showInTable: false, pipe: 'date', pipeArgs: 'yyyy-MM-dd hh:mm:ss', tabOrder: 19 },
+  { key: 'isDeleted', label: '탈퇴여부', showInTable: false, tabOrder: 20 },
+  { key: 'lockoutEnd', label: '잠금시간', showInTable: false, tabOrder: 21 },
+  { key: 'lockoutEnabled', label: '잠금가능', showInTable: false, tabOrder: 22 },
+  { key: 'phoneNumber', label: '전화번호', showInTable: false, tabOrder: 23 },
+  { key: 'timeZone', label: '시간대', position: 'footer', showInTable: false, tabOrder: 24 },
+  { key: 'locale', label: '언어', position: 'footer', showInTable: false, tabOrder: 25 },
+  { key: 'isActive', label: '계정상태', showInTable: false, pipe: 'active', tabOrder: 26, position: 'sub-header', placeHoder: '활성여부' },
+  { key: 'lastLoginAt', label: '최근 접속시간', position: 'footer', pipe: 'date', pipeArgs: 'yyyy-MM-dd hh:mm:ss', showInTable: false, tabOrder: 27 },
+  { key: 'lastLoginIP', label: '최근 접속장소', position: 'footer', showInTable: false, tabOrder: 28 },
+  { key: 'roles', label: '역할', pipe: 'roles', pipeArgs: 'en', showInTable: false, tabOrder: 29 },
+  { key: 'introduction', label: '소개', position: 'content', showInTable: false, tabOrder: 30 },
+]);

@@ -1,0 +1,29 @@
+<mat-nav-list>
+  @for (item of dataList(); track $index) {
+  <p matListItemTitle
+     (click)="close($event)"
+     class="flex items-center justify-center bg-sky-500/20 text-white font-black cursor-pointer
+     text-shadow-md border-b-4 border-b-red-400/75 pt-3 pb-2
+     content-center w-full rounded-t-2xl rounded-b-xs"
+     [class]="{'bg-sky-600': item.success}">
+    {{item.title}}
+  </p>
+
+  @if(item.content != null) {
+  <p (click)="close($event)"
+     class="p-2 w-full mt-2 cursor-pointer bg-slate-400/25 text-xs text-white rounded-sm font-noto text-center content-center"
+     matLine> {{item.content}} </p>
+  }
+
+  @if (item.type === 'confirm') {
+  <div class="flex justify-center gap-2 mt-4 ">
+    <button matButton class="text-white hover:bg-amber-600 bg-sky-400/20"
+            (click)="onCancel(item)">취소</button>
+    <button matButton class="text-white hover:bg-amber-600 bg-sky-400/20"
+            (click)="onConfirm(item)">확인</button>
+  </div>
+  }
+
+  }
+
+</mat-nav-list>

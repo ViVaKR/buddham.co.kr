@@ -1,0 +1,20 @@
+<button matIconButton
+        [matMenuTriggerFor]="menu"
+        class="text-white flex cursor-pointer justify-center items-center!"
+        aria-label="로그인 메뉴">
+    <mat-icon fontSet="material-icons-outlined">more_vert</mat-icon>
+</button>
+
+<mat-menu #menu="matMenu" class="mt-5 bg-slate-200/80 flex flex-col gap-2">
+    @for (item of authGroup(); track item.id || $index) {
+        <button mat-menu-item
+                [matTooltip]="item.tooltip"
+                matTooltipPosition="left"
+                [routerLink]="[item.url]">
+            <mat-icon
+                    fontSet="material-icons-outlined">{{ item.icon }}
+            </mat-icon>
+            <span>{{ item.title }}</span>
+        </button>
+    }
+</mat-menu>

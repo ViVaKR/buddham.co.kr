@@ -1,0 +1,171 @@
+.cursor-table-container {
+  animation: tableReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+  @keyframes tableReveal {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .data-row {
+    transition:
+      background-color 0.25s ease,
+      box-shadow 0.25s ease;
+
+    &:hover {
+      background-color: rgba(240, 249, 255, 0.45) !important;
+    }
+
+    &.expanded-active {
+      background-color: rgba(240, 249, 255, 0.7) !important;
+
+      td {
+        border-bottom-color: transparent !important;
+        color: #0369a1;
+      }
+    }
+  }
+
+  /*
+     🔥 성능 저하 없는 초고속 Grid 높이 확장 애니메이션 (아코디언용 치트키)
+    */
+  .expand-grid-wrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+    overflow: hidden;
+
+    &.open {
+      grid-template-rows: 1fr;
+    }
+  }
+
+  .detail-inner-box {
+    /* grid transition의 핵심 */
+    min-height: 0;
+    overflow: hidden;
+    transform: translateY(-8px);
+    opacity: 0;
+    transition:
+      transform 0.35s ease,
+      opacity 0.35s ease;
+
+    .open & {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  .detail-row {
+    height: 0 !important;
+
+    td {
+      padding: 0 !important;
+      border-bottom: none !important;
+      height: 0 !important;
+      line-height: 0 !important;
+    }
+  }
+
+  .expand-trigger {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    &.rotated {
+      transform: rotate(-180deg);
+      color: #0284c7;
+    }
+  }
+
+  /* 네온 글래스모피즘 검색창 테두리 */
+  .glass-input {
+    ::ng-deep .mat-mdc-text-field-wrapper {
+      background-color: rgba(255, 255, 255, 0.6) !important;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(14, 165, 233, 0.15) !important;
+      border-radius: 12px !important;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.03);
+      transition: all 0.3s ease;
+
+      &:hover {
+        border-color: rgba(14, 165, 233, 0.4) !important;
+        box-shadow: 0 6px 16px rgba(2, 132, 199, 0.06);
+      }
+    }
+
+    ::ng-deep .mat-mdc-form-field-focus-indicator {
+      display: none;
+    }
+  }
+
+  /* 모던 머티리얼 탭 오버라이드 */
+  .modern-tabs {
+    ::ng-deep .mat-mdc-tab-header {
+      border-bottom: 2px solid rgba(14, 165, 233, 0.08);
+    }
+    ::ng-deep .mat-mdc-tab-labels {
+      gap: 8px;
+    }
+    ::ng-deep .mdc-tab {
+      height: 40px;
+      padding: 0 16px;
+      border-radius: 8px 8px 0 0;
+
+      &--active {
+        background-color: rgba(240, 249, 255, 0.8);
+      }
+    }
+  }
+
+  /* 더 보기 수동 버튼 3D 효과 */
+  .load-more-btn {
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+    color: white !important;
+    border: none;
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(3, 105, 161, 0.3) !important;
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    &:disabled {
+      background: #cbd5e1 !important;
+      color: #94a3b8 !important;
+    }
+  }
+
+  /* Like 버튼 활성 효과 */
+  .liked {
+    color: #f43f5e !important;
+    animation: heartBeat 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  @keyframes heartBeat {
+    0% {
+      transform: scale(0.9);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(0.9);
+    }
+  }
+}
+
+.toggle-button {
+  transition: transform 1000ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toggle-button-expanded {
+  transform: rotate(180deg);
+}

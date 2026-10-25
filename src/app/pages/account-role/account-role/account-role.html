@@ -1,0 +1,28 @@
+  <body-layout>
+    <title-layout [title]="title" />
+    <div content>
+      <accordion-table
+                       [data]="service.items()"
+                       [detailUrl]="detailUrl"
+                       [isLoading]="service.isLoading()"
+                       [cols]="columns()"
+                       [totalItems]="service.totalCount()"
+                       (searchChange)="onSearch($event)">
+      </accordion-table>
+
+      <div class="flex flex-row my-4 gap-3 items-center justify-center">
+        <button matButton="elevated" (click)="prePage()">이전 목록</button>
+        <button matButton="elevated" (click)="goCreateRole()">역할 추가</button>
+        <button matButton="elevated" (click)="nextPage()">다음 목록</button>
+      </div>
+    </div>
+  </body-layout>
+
+
+<div class="fixed right-6 bottom-6 w-auto
+            rounded-2xl z-100
+            h-auto p-4 flex items-center justify-center
+            transition-all duration-300
+            hover:bg-slate-300/70">
+  <scroll-to />
+</div>

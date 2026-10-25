@@ -1,0 +1,137 @@
+.stream-text {
+  word-break: break-word;
+}
+
+.progress-container {
+  width: 100%;
+  height: 4px;
+  background: #e2e8f0;
+  border-radius: 2px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.status-bar-inner {
+  height: 100%;
+  background: #7c6fcd;
+  border-radius: 2px;
+  /* 가짜 로딩 애니메이션: 50초 동안 90%까지 서서히 차오름 */
+  width: 0%;
+  animation: loading-fake 120s forwards cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes loading-fake {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 90%;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.btn-ask,
+.btn-stop {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  white-space: nowrap;
+  font-weight: 500;
+}
+.btn-ask {
+  background: #7c6fcd;
+  color: #fff;
+}
+
+.btn-ask:hover {
+  background: #6a5dc2;
+}
+
+.btn-stop {
+  background: #e74c3c;
+  color: #fff;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #7c6fcd;
+}
+
+textarea:disabled {
+  opacity: 0.6;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fade-in 0.25s ease-out forwards;
+}
+
+.waiting-box {
+  height: auto;
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+
+  .lotus-spinner {
+    font-size: 40px;
+    animation: rotate-lotus 3s linear infinite;
+  }
+
+  .wisdom-text {
+    font-size: 18px;
+    color: #555;
+    font-style: italic;
+    margin-bottom: 12px;
+    word-break: keep-all;
+  }
+
+  .wait-sub-text {
+    font-size: 13px;
+    color: #999;
+  }
+}
+
+@keyframes rotate-lotus {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(15deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.thinking-label {
+  font-size: 12px;
+  color: #7c6fcd;
+  margin-bottom: 5px;
+  font-weight: bold;
+  animation: pulse 1.5s infinite;
+}

@@ -1,0 +1,27 @@
+<nav class="menu-bar-nav main-header">
+
+  <div class="w-auto h-full px-1 flex items-center gap-4 justify-right">
+    <a [routerLink]="['']" class="menu-bar-logo">
+      <mat-icon svgIcon="logo-64" class="size-12 rounded-full p-0" />
+      <span class="menu-bar-title">정토사경</span>
+    </a>
+  </div>
+
+  <!-- 메인메뉴 -->
+  <div class="w-full h-full flex justify-center-safe items-center">
+    @if (!isMobile()) {
+    <menu-main />
+    } @else {
+    <menu-main-hamburger></menu-main-hamburger>
+    }
+  </div>
+
+  <!-- 회원 및 로그인 메뉴 -->
+  <div class="w-40 h-18 mt-0.5 gap-1 flex items-center justify-center">
+    @if(!isLoggedIn()){
+    <menu-auth></menu-auth>
+    } @else {
+    <menu-account></menu-account>
+    }
+  </div>
+</nav>

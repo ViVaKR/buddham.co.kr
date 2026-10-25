@@ -1,0 +1,138 @@
+<section class="mx-auto flex h-dvh w-full max-w-3xl flex-col
+p-4 bg-stone-50 text-slate-800">
+
+  <!-- 상단 바 -->
+  <header class="flex items-center justify-between
+  gap-3 border-b border-slate-200 bg-white px-4 py-3">
+    <div class="min-w-0">
+      <h2 class="m-0 text-lg font-bold tracking-tight text-slate-900">법담</h2>
+      @if (joinedRoom(); as r) {
+      <p class="m-0 truncate text-sm text-slate-500">{{ site }} 도량 · {{ r }} 방</p>
+      }
+    </div>
+
+    <div class="flex items-center gap-3">
+      @switch (chat.status()) {
+      @case ('connected') {
+      <span class="flex items-center gap-1.5 text-sm text-teal-700">
+        <mat-icon>wifi</mat-icon>
+        <span class="size-2 rounded-full bg-teal-600"></span>연결됨
+
+      </span>
+      }
+      @case ('connecting') {
+      <span class="flex items-center gap-1.5 text-sm text-amber-700">
+        <span class="size-2 animate-pulse rounded-full bg-amber-500"></span>연결 중
+      </span>
+      }
+      @case ('reconnecting') {
+      <span class="flex items-center gap-1.5 text-sm text-amber-700">
+        <span class="size-2 animate-pulse rounded-full bg-amber-500"></span>다시 연결 중
+      </span>
+      }
+      @default {
+      <span class="flex items-center gap-1.5 text-sm text-slate-500">
+        <mat-icon>wifi_off</mat-icon>
+        <span class="size-2 rounded-full bg-slate-300"></span>연결 안 됨
+      </span>
+      }
+      }
+
+      @if (joinedRoom() !== null) {
+      <button matButton (click)="leave()">
+        <mat-icon>logout</mat-icon>
+        방 나가기
+      </button>
+      }
+      @if (chat.status() !== 'disconnected') {
+      <button matButton (click)="disconnect()">
+        <mat-icon>power_off</mat-icon>
+        연결 끊기
+      </button>
+
+      }
+    </div>
+  </header>
+
+  <!-- 입장 전: 도량 · 방 선택 -->
+  @if (joinedRoom() === null) {
+  <div class="flex flex-1 flex-col items-center justify-center gap-6 p-6">
+    <div class="w-full max-w-sm rounded-xl border border-slate-200 bg-white p-6">
+      <p class="mb-4 mt-0 text-base font-semibold text-slate-900">
+        @if (chat.status() === 'connected') { 들어갈 방을 고르세요 } @else { 도량에 연결하세요 }
+      </p>
+
+      <div class="flex flex-col gap-1">
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>도량</mat-label>
+          <input matInput [(ngModel)]="site" name="site"
+                 [disabled]="chat.status() !== 'disconnected'" autocomplete="off" />
+        </mat-form-field>
+
+        @if (chat.status() === 'disconnected') {
+        <button matButton="filled" class="mt-3" (click)="connect()">연결하기</button>
+        }
+      </div>
+
+      @if (chat.status() === 'connected') {
+      <div class="mt-5 flex flex-col gap-1 border-t border-slate-200 pt-5">
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>방 이름</mat-label>
+          <input matInput [(ngModel)]="room" name="room" autocomplete="off"
+                 (keydown.enter)="join()" />
+        </mat-form-field>
+        <button matButton="filled" class="mt-3" [disabled]="!room.trim()" (click)="join()">입장하기</button>
+      </div>
+      }
+
+      @if (chat.error(); as err) {
+      <p class="mb-0 mt-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">{{ err }}</p>
+      }
+    </div>
+  </div>
+  } @else {
+
+  <!-- 대화 -->
+  <ul #scroller class="m-0 flex flex-1 list-none flex-col gap-2 overflow-y-auto px-4 py-4"
+      aria-live="polite">
+    @for (item of timeline(); track item.key) {
+
+    @if (item.type === 'evt') {
+    <li class="self-center py-1 text-xs text-slate-400">
+      {{ item.e.user }}님이 {{ item.e.kind === 'join' ? '들어왔습니다' : '나갔습니다' }}
+    </li>
+    } @else {
+    <li class="flex max-w-[82%] flex-col gap-0.5"
+        [class.self-end]="isMine(item.m)" [class.items-end]="isMine(item.m)">
+      @if (!isMine(item.m)) {
+      <span class="px-1 text-xs font-medium text-slate-500">{{ item.m.user }}</span>
+      }
+      <div class="flex items-end gap-2" [class.flex-row-reverse]="isMine(item.m)">
+        <span class="whitespace-pre-wrap wrap-break-word rounded-2xl px-3.5 py-2 text-[15px] leading-relaxed"
+              [class]="isMine(item.m)
+                ? 'rounded-br-sm bg-teal-700 text-white'
+                : 'rounded-bl-sm border border-slate-200 bg-white text-slate-800'">{{ item.m.text }}</span>
+        <time class="shrink-0 text-[11px] text-slate-400">{{ item.m.sentAt | date: 'HH:mm' }}</time>
+      </div>
+    </li>
+    }
+
+    } @empty {
+    <li class="m-auto text-sm text-slate-400">아직 나눈 말씀이 없습니다. 첫 인사를 남겨 보세요.</li>
+    }
+  </ul>
+
+  @if (chat.error(); as err) {
+  <p class="m-0 border-t border-red-100 bg-red-50 px-4 py-2 text-sm text-red-700" role="alert">{{ err }}</p>
+  }
+
+  <!-- 입력 -->
+  <form class="flex items-center gap-2 border-t border-slate-200 bg-white p-3" (ngSubmit)="send()">
+    <input [(ngModel)]="draft" name="draft" autocomplete="off" maxlength="2000"
+           class="min-w-0 flex-1 rounded-full border border-slate-300 bg-stone-50 px-4 py-2.5 text-[15px]
+                  outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20"
+           placeholder="메시지를 입력하세요" />
+    <button type="submit" matButton="filled" [disabled]="!draft.trim()">보내기</button>
+  </form>
+  }
+</section>

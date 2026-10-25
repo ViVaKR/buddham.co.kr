@@ -1,0 +1,358 @@
+<body-layout class="w-full">
+  <title-layout [title]="title()" [color]="color" />
+  <div content class="flex flex-col w-full items-center justify-start">
+
+    @if(form()) {
+    <form (ngSubmit)="onSubmit($event)"
+          #formDirective="ngForm"
+          class="flex flex-col gap-3 min-w-2/3"
+          [formGroup]="form()!">
+
+      <mat-form-field appearance="outline">
+        <mat-label>ID</mat-label>
+        <input matInput formControlName="id"
+               class="text-slate-400 uppercase"
+               required readonly="true">
+        <mat-icon matPrefix fontSet="material-icons-outlined">subject</mat-icon>
+
+        @if (hasAnyError('id')) { <mat-error>{{ errorMessage('id') }}</mat-error> }
+        <mat-hint align="end">아이디 (수정불가)</mat-hint>
+      </mat-form-field>
+
+      <div class="grid grid-cols-2 gap-2">
+        <mat-form-field appearance="outline">
+          <mat-label>USER NAME</mat-label>
+          <input matInput
+                 required
+                 formControlName="userName"
+                 readonly="true" class="text-slate-400 uppercase">
+          <mat-icon matPrefix fontSet="material-icons-outlined">subject</mat-icon>
+
+          @if (hasAnyError('userName')) {
+          <mat-error>{{ errorMessage('userName') }}</mat-error>
+          }
+          <mat-hint align="end">회원이름(수정불가)</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>EMAIL</mat-label>
+          <input matInput formControlName="email" required readonly class="text-slate-400">
+          <mat-icon matPrefix fontSet="material-icons-outlined">subject</mat-icon>
+
+          @if (hasAnyError('email')) {
+          <mat-error>{{ errorMessage('email') }}</mat-error>
+          }
+          <mat-hint align="end">이메일(수정불가)</mat-hint>
+        </mat-form-field>
+      </div>
+      <div class="grid grid-cols-2 h-auto min-h-0 transition-all duration-700"
+           [class.gap-2]="!isHide()"
+           [class.gap-x-2]="isHide()"
+           [class.gap-y-0]="isHide()">
+
+        <mat-form-field appearance="outline">
+          <mat-label>FULL NAME</mat-label>
+          <input matInput
+                 required
+                 readonly="true"
+                 formControlName="fullName"
+                 class="text-slate-400">
+          <mat-icon matPrefix fontSet="material-icons-outlined">subject</mat-icon>
+
+          <button matIconButton
+                  matSuffix
+                  type="button"
+                  matTooltip="불명/법명 수정하기" matTooltipPosition="left"
+                  (click)="editPseudonym($event)">
+            <mat-icon>{{!isHide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+
+          @if (hasAnyError('fullName')) { <mat-error>{{ errorMessage('fullName') }}</mat-error> }
+          <mat-hint align="end">불명/법명</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>PSEUDONYM</mat-label>
+          <input matInput formControlName="pseudonym" required readonly="true" class="text-slate-400">
+          <mat-icon matPrefix fontSet="material-icons-outlined">subject</mat-icon>
+          <button matIconButton matSuffix type="button" matTooltip="필명수정하기" matTooltipPosition="left"
+                  (click)="editPseudonym($event)">
+            <mat-icon>{{!isHide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          @if (hasAnyError('pseudonym')) { <mat-error>{{ errorMessage('pseudonym') }}</mat-error> }
+          <mat-hint align="end">필명</mat-hint>
+        </mat-form-field>
+
+        <div class="transition-all duration-700 ease-in-out"
+             [class.max-h-0]="isHide()"
+             [class.opacity-0]="isHide()"
+             [class.pointer-events-none]="isHide()"
+             [class.max-h-35]="!isHide()"
+             [class.opacity-100]="!isHide()">
+
+          <mat-form-field appearance="outline" class="w-full" subscriptSizing="dynamic">
+            <mat-label>불명/법명 수정</mat-label>
+            <input matInput
+                   [formControl]="editFullNameCtrl"
+                   [errorStateMatcher]="matcher"
+                   (keydown.enter)="$event.preventDefault(); updateFullNameOnly()"
+                   class="text-teal-700 font-bold font-noto">
+            <mat-icon matPrefix fontSet="material-icons-outlined">subject</mat-icon>
+
+            <button type="button" matSuffix matIconButton
+                    matTooltip="불명/법명 즉시 수정하기"
+                    matTooltipPosition="left"
+                    (click)="updateFullNameOnly()">
+
+              <mat-icon class="hover:text-sky-400" fontSet="material-icons-outlined">edit</mat-icon>
+
+            </button>
+
+            @if (editFullNameCtrl.hasError('required')) {
+            <mat-error>법명은 필수 입력 항목입니다.</mat-error>
+            }
+            @if (editFullNameCtrl.hasError('minlength')) {
+            <mat-error>
+              법명은 2자 이상이어야 합니다.
+              (현재 {{ editFullNameCtrl.getError('minlength')?.actualLength }}자)
+            </mat-error>
+            }
+            <mat-hint align="end">EDIT FULLNAME</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <div class="transition-all duration-700 ease-in-out "
+             [class.max-h-0]="isHide()"
+             [class.opacity-0]="isHide()"
+             [class.pointer-events-none]="isHide()"
+             [class.max-h-35]="!isHide()"
+             [class.opacity-100]="!isHide()">
+
+          <mat-form-field appearance="outline" class="w-full" subscriptSizing="dynamic">
+            <mat-label>필명수정</mat-label>
+            <input matInput
+                   [formControl]="editPseudonymCtrl"
+                   [errorStateMatcher]="matcher"
+                   (keydown.enter)="$event.preventDefault(); updatePseudonymOnly()"
+                   class="text-teal-700 font-bold font-noto">
+            <mat-icon matPrefix fontSet="material-icons-outlined">subject</mat-icon>
+
+            @if (editPseudonymCtrl.pending) {
+            <mat-spinner matSuffix [diameter]="18" class="mr-2"></mat-spinner>
+            } @else {
+            <button type="button" matSuffix matIconButton (click)="updatePseudonymOnly()">
+              <mat-icon class="hover:text-sky-400" fontSet="material-icons-outlined">edit</mat-icon>
+            </button>
+            }
+
+            @if (editPseudonymCtrl.hasError('required')) {
+            <mat-error>필명은 필수 입력 항목입니다.</mat-error>
+            }
+            @if (editPseudonymCtrl.hasError('pseudonymTaken')) {
+            <mat-error>이미 사용 중인 멋진 필명이네요. 다른 걸 입력해 주세요!</mat-error>
+            }
+            @if (editPseudonymCtrl.hasError('minlength')) {
+            <mat-error>
+              필명은 2자 이상이어야 합니다.
+              (현재 {{ editPseudonymCtrl.getError('minlength')?.actualLength }}자)
+            </mat-error>
+            }
+            <mat-hint align="end">EDIT PSEUDONYM</mat-hint>
+          </mat-form-field>
+        </div>
+
+      </div>
+
+
+      <div class="grid grid-cols-[60px_1fr] gap-2 items-start">
+
+        <!-- 왼쪽 아바타 이미지 — 크기 고정! -->
+        <div class="avatar-wrap">
+          <img
+               [src]="getAvatar()"
+               width="15"
+               height="15"
+               loading="lazy"
+               class="avatar avatar-lg object-center" />
+          <div class="avatar-overlay" (click)="fileInput.click()">사진 변경</div>
+        </div>
+
+        <mat-form-field class="w-full my-auto" appearance="outline">
+          <mat-label>AVATAR</mat-label>
+          <input matInput formControlName="avatar" required class="truncate text-slate-400" readonly="true">
+          <mat-icon matPrefix fontSet="material-icons-outlined">subject</mat-icon>
+          @if (hasAnyError('avatar')) {
+          <mat-error>{{ errorMessage('avatar') }}</mat-error>
+          }
+          <mat-hint align="end">아바타</mat-hint>
+        </mat-form-field>
+
+      </div>
+      <div class="flex w-full gap-2">
+
+        @if(fileErrorMessage()) {
+        <div class="text-xs text-red-700 bg-red-100 p-4 my-2 font-bold">
+          {{ fileErrorMessage() }}
+        </div>
+        }
+
+        @if(selectedFile() != null) {
+        <div
+             class="text-xs text-slate-600 py-2 my-2 grid grid-cols-[100px_1fr_100px] gap-2 items-center">
+          <div class="size-24 grid place-items-center">
+            @if(hasPreview()) {
+            <img [src]="previewUrl()"
+                 class='size-24 rounded-full border-2 border-slate-400 object-center'>
+            }
+          </div>
+          <div class="items-start justify-start flex flex-col gap-1 w-full text-xs text-slate-500">
+
+            <p>{{ '❦ 파일크기: ' + fileSize().formatedSize }}</p>
+            <p>{{ '❦ 파일이름: ' + selectedFile()?.name }}</p>
+            <p>{{ '❦ 파일타입: ' + selectedFile()?.type }}</p>
+            <p> {{ '❦ 미리보기: ' + previewUrl() | truncate : 50: 'middle' : '...' }} </p>
+          </div>
+          <div class="flex flex-col gap-2 justify-end items-end">
+            <button type="button" matButton="elevated" (click)="uploadAvatar()">변경</button>
+            <button type="button" matButton="tonal" (click)="reset()">취소</button>
+          </div>
+
+          <!-- 진행률 바 -->
+          <div class="progress-container w-full px-4 col-span-3">
+            <mat-progress-bar
+                              [mode]="fileManagerService.isUploading() ? 'determinate' : 'determinate'"
+                              [value]="fileManagerService.uploadProgress().progress"
+                              [color]="'accent'"
+                              class="rounded-full">
+            </mat-progress-bar>
+
+            <div class="flex justify-between mt-2 text-xs text-slate-400">
+              <span>
+                {{ fileManagerService.uploadProgress().progress }}%
+                ({{ fileManagerService.formatFileSize(fileManagerService.uploadProgress().loaded) }}
+                / {{ fileManagerService.formatFileSize(fileManagerService.uploadProgress().total) }})
+              </span>
+              <span class="truncate max-w-xs">{{ selectedFile()?.name }}</span>
+              <span>{{ fileSize().formatedSize }}</span>
+            </div>
+          </div>
+        </div>
+        }
+
+      </div>
+
+      <div class="grid grid-cols-3 gap-2">
+
+        <mat-form-field appearance="outline">
+          <mat-label>타임존</mat-label>
+          <mat-select formControlName="timeZone">
+            @for (item of timeZones; track $index) {
+            <mat-option [value]="item">{{ item }}</mat-option>
+            }
+          </mat-select>
+          <mat-icon matPrefix fontSet="material-icons-outlined">subject</mat-icon>
+          @if (hasAnyError('timeZone')) {
+          <mat-error>{{ errorMessage('timeZone') }}</mat-error>
+          }
+          <mat-hint align="end">TIME ZONE({{ (timeZone()) }})</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>활동언어</mat-label>
+          <mat-select formControlName="locale">
+            @for (item of locales; track $index) {
+            <mat-option [value]="item.value">{{ item.label }}</mat-option>
+            }
+          </mat-select>
+          <mat-icon matPrefix fontSet="material-icons-outlined">subject</mat-icon>
+          @if (hasAnyError('locale')) {
+          <mat-error>{{ errorMessage('locale') }}</mat-error>
+          }
+          <mat-hint align="end">LOCALE({{ locale() }})</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>가입경로</mat-label>
+          <input matInput formControlName="provider" required>
+          <mat-icon matPrefix fontSet="material-icons-outlined">subject</mat-icon>
+
+          @if (hasAnyError('provider')) {
+          <mat-error>{{ errorMessage('provider') }}</mat-error>
+          }
+          <mat-hint align="end">PROVIDER</mat-hint>
+        </mat-form-field>
+      </div>
+      <text-style-selector
+                           [font]="currentFont()"
+                           [size]="currentFontSize()"
+                           [lineSpace]="lineSpace()"
+                           (resizeRequested)="triggerResize()"
+                           (styleChanged)="onTextStyleChanged($event)">
+      </text-style-selector>
+
+      <mat-form-field appearance="outline">
+        <mat-label>소개글</mat-label>
+        <textarea matInput
+                  tabIndent
+                  cdkTextareaAutosize
+                  #autosize="cdkTextareaAutosize"
+                  [cdkAutosizeMinRows]="minRows()"
+                  spellcheck="false"
+                  autocomplete="off"
+                  autocorrect="off"
+                  autocapitalize="off"
+                  [class]="currentFont()"
+                  (keydown.enter)="$event.stopPropagation()"
+                  [style.fontSize]="currentFontSize()"
+                  [style.lineHeight]="lineSpace()"
+                  formControlName="introduction"></textarea>
+        <mat-icon matPrefix fontSet="material-icons-outlined">subject</mat-icon>
+
+        @if (hasAnyError('introduction')) {
+        <mat-error>{{ errorMessage('introduction') }}</mat-error>
+        }
+        <mat-hint align="end">INTRODUCTION</mat-hint>
+      </mat-form-field>
+      <div class="flex flex-row gap-4 justify-evenly">
+
+        @if(isAdmin()) {
+        <button matButton="outlined"
+                type="button"
+                (click)="goList()">목록으로
+        </button>
+        }@else {
+        <button matButton="outlined"
+                type="button"
+                (click)="goMandala()">프로필
+        </button>
+        }
+        <button
+                matButton="filled"
+                type="submit"
+                [disabled]="form()?.invalid || form()?.pending"
+                class="hover:bg-red-400">
+          <mat-icon fontSet="material-icons-outlined"> edit </mat-icon>
+          {{ submitLabel() }}
+        </button>
+      </div>
+
+    </form>
+    }@else {
+    <mat-progress-bar mode="indeterminate" />
+    }
+  </div>
+
+
+</body-layout>
+<!-- 아바다 파일 업로드  -->
+<input #fileInput type="file" hidden [accept]="allowed" (change)="onFileSelected($event)">
+
+<div class="fixed right-6 bottom-6 w-auto
+            rounded-2xl z-100
+            h-auto p-4 flex items-center justify-center
+            transition-all duration-300
+            hover:bg-slate-300/70">
+  <scroll-to />
+</div>
+
+<div class="h-96"></div>

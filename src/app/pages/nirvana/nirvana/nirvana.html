@@ -1,0 +1,33 @@
+<body-layout>
+  <title-layout [title]="title" [color]="color" />
+  <div content class="signup-container bg-transparent flex flex-col
+            items-center min-h-screen justify-start w-full">
+    <h3 class="text-slate-400 my-4">{{ userEmail() }}</h3>
+    <form (ngSubmit)="onSubmit($event)"
+          [formGroup]="form"
+          class="w-120 h-auto overflow-auto
+              shadow-xs/20 border-sky-700/75 border-2 rounded-3xl
+              mx-8 bg-transparent p-10">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>가입해지 비밀번호 확인</mat-label>
+        <input matInput required min="6"
+               type="{{hidePassword() === true ? 'password' : 'text' }}"
+               placeholder="로그인 비밀번호 (6자 이상)"
+               formControlName="password">
+        <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
+        <mat-icon (click)="togglePassword($event)" matSuffix class="cursor-pointer">
+          {{ hidePassword() ? 'visibility_off' : 'visibility' }}
+        </mat-icon>
+        @if (hasError('password', 'required')) {
+        <mat-error>비밀번호 확인은 필수 항목입니다.</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="flex flex-row justify-evenly gap-2 items-center">
+        <button matButton="elevated" type="submit" class="mt-4 w-3/4!">
+          가입해제 하기
+        </button>
+      </div>
+    </form>
+  </div>
+</body-layout>

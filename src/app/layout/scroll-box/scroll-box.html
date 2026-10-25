@@ -1,0 +1,82 @@
+<div
+     class="flex flex-col gap-4 w-full
+     transition-opacity duration-300
+     items-center justify-center h-auto"
+     [class.opacity-100]="isVisible()"
+     [class.opacity-0]="!isVisible()"
+     [class.pointer-events-auto]="isVisible()"
+     [class.pointer-events-none]="!isVisible()">
+
+  <button mat-icon-button
+          matTooltip="상단으로"
+          matTooltipPosition="above"
+          (click)="scrollToTopAngular()">
+    <mat-icon class="text-teal-800/75">vertical_align_top</mat-icon>
+  </button>
+
+  <button mat-icon-button
+          matTooltip="특정 앵커로 이동"
+          matTooltipPosition="left"
+          class="flex items-center justify-center"
+          (click)="scrollToAnchor('createId')">
+    <mat-icon class="text-teal-800/75">arrow_upward</mat-icon>
+  </button>
+
+  <!-- 천천히 스크롤링 글 읽기 목적 -->
+  <button
+          mat-icon-button
+          (click)="scrollForSlowRead()"
+          class="flex justify-center items-center"
+          matTooltip="천천히 읽기 시작"
+          matTooltipPosition="left"
+          [class.active]="isAutoScrolling()">
+    <mat-icon [class.text-amber-500]="!isAutoScrolling()"
+              [class.text-green-500]="isAutoScrolling()">
+      {{ isAutoScrolling() ? 'pause' : 'speed' }}
+    </mat-icon>
+  </button>
+
+  <!-- 속도 조절 버튼 (옵션) -->
+  @if (isAutoScrolling()) {
+  <div class="flex flex-col w-full gap-1 p-2 bg-gray-100/50 border
+            border-slate-100 items-center justify-center rounded-2xl">
+
+    <button mat-icon-button
+            (click)="setSpeedPreset('slow')"
+            matTooltip="느리게"
+            matTooltipPosition="left">
+      <mat-icon class="text-xs">speed</mat-icon>
+    </button>
+
+    <button mat-icon-button
+            class="flex justify-center items-center"
+            (click)="setSpeedPreset('medium')"
+            matTooltip="보통"
+            matTooltipPosition="left">
+      <mat-icon>speed</mat-icon>
+    </button>
+
+    <button mat-icon-button
+            (click)="setSpeedPreset('fast')"
+            matTooltip="빠르게"
+            matTooltipPosition="left">
+      <mat-icon class="text-lg">speed</mat-icon>
+    </button>
+  </div>
+  }
+
+  <button mat-icon-button
+          matTooltip="특정 앵커로 이동"
+          matTooltipPosition="left"
+          (click)="scrollToAnchor('createId')">
+    <mat-icon class="text-red-800/75">arrow_downward</mat-icon>
+  </button>
+
+  <button mat-icon-button
+          matTooltip="화면 아래로 이동"
+          matTooltipPosition="left"
+          class="flex items-center justify-center"
+          (click)="scrollToBottomAngular()">
+    <mat-icon class="text-red-800/75">vertical_align_bottom</mat-icon>
+  </button>
+</div>

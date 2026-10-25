@@ -1,0 +1,20 @@
+<div title
+     class="flex items-center border-b-4 border-slate-200/50 h-14
+      rounded-2xl shrink-0 bg-transparent justify-center gap-2">
+
+  <mat-icon
+            class="text-slate-600 scale-110"
+            fontSet="material-icons-outlined">
+    {{ icon() }}
+  </mat-icon>
+
+  <p class="text-lg font-noto text-slate-600
+             flex items-center justify-center gap-2 tracking-tight">
+
+    <span [class]="color()" class="font-extrabold">{{ title() }} </span>
+    <span>&#10086;</span>
+    <span class="font-extrabold tracking-tight"> {{ base.outletTitle() }} </span>
+
+  </p>
+
+</div>

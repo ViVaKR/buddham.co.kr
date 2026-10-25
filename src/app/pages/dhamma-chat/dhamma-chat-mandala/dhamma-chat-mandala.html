@@ -1,0 +1,53 @@
+<div class="mx-auto flex h-dvh max-w-3xl flex-col">
+  <header class="border-b border-slate-200 px-4 py-3">
+    <h1 class="text-lg font-semibold text-slate-800">다르마 챗</h1>
+  </header>
+
+  <main #scroller class="flex-1 space-y-4 overflow-y-auto px-4 py-6">
+    @if (messages().length === 0) {
+    <p class="mt-24 text-center text-slate-500">
+      궁금한 법문이나 수행에 대해 물어보세요.
+    </p>
+    }
+
+    @for (m of messages(); track $index) {
+    <div class="flex" [class.justify-end]="m.role === 'user'">
+      <div
+           class="max-w-[85%] whitespace-pre-wrap rounded-2xl px-4 py-2 leading-relaxed"
+           [class.bg-indigo-600]="m.role === 'user'"
+           [class.text-white]="m.role === 'user'"
+           [class.bg-slate-100]="m.role === 'assistant' && !m.error"
+           [class.text-slate-800]="m.role === 'assistant' && !m.error"
+           [class.bg-red-50]="m.error"
+           [class.text-red-700]="m.error">
+        {{ m.text }}@if (streaming() && $last && m.role === 'assistant') {<span class="animate-pulse">▍</span>}
+      </div>
+    </div>
+    }
+  </main>
+
+  <footer class="flex items-end gap-2 border-t border-slate-200 p-3">
+    <textarea
+              class="max-h-40 min-h-11 flex-1 resize-none rounded-xl border border-slate-300 px-3 py-2 outline-none focus:border-indigo-500"
+              rows="1"
+              placeholder="질문을 입력하세요 (Shift+Enter 줄바꿈)"
+              [ngModel]="draft()"
+              (ngModelChange)="draft.set($event)"
+              (keydown)="onKeydown($event)"></textarea>
+
+    @if (streaming()) {
+    <button mat-icon-button type="button" aria-label="답변 중단" (click)="stop()">
+      <mat-icon>stop_circle</mat-icon>
+    </button>
+    } @else {
+    <button
+            mat-icon-button
+            type="button"
+            aria-label="보내기"
+            [disabled]="!draft().trim()"
+            (click)="send()">
+      <mat-icon>send</mat-icon>
+    </button>
+    }
+  </footer>
+</div>

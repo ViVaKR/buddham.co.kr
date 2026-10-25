@@ -1,0 +1,17 @@
+  <body-layout>
+    <title-layout [title]="title"/>
+    <div content>
+      <accordion-table
+        [data]="service.items()"
+        [detailUrl]="detailUrl"
+        [isLoading]="service.isLoading()"
+        [cols]="columns()"
+        (loadMore)="service.loadMore()"
+        [totalItems]="service.totalCount()"
+        (searchChange)="onSearch($event)">
+      </accordion-table>
+      <div class="flex flex-row my-4 gap-3 items-center justify-center">
+        <button matButton="elevated" (click)="onCreate()">역할 추가</button>
+      </div>
+    </div>
+  </body-layout>

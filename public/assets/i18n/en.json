@@ -1,0 +1,28 @@
+{
+    "COMMON": {
+        "BUTTON": {
+            "SUBMIT": "Submit",
+            "CANCEL": "Cancel",
+            "SAVE": "Save"
+        }
+    },
+    "LANG": {
+        "KO": "Korean",
+        "PALI_ROMAN": "Pāli (Roman)",
+        "PALI_SINHALA": "Pāli (Sinhala)",
+        "PALI_BURMESE": "Pāli (Burmese)",
+        "SANSKRIT": "Sanskrit",
+        "TIBETAN": "Tibetan",
+        "CLASSICAL_CHINESE": "Classical Chinese"
+    },
+    "SCRIPTURE": {
+        "LABEL": {
+            "BOOK": "Volume",
+            "CHAPTER": "Chapter",
+            "PASSAGE": "Passage",
+            "ORIGINAL": "Original",
+            "SELECT_SCRIPT": "Select Language",
+            "PARALLEL": "Parallel View"
+        }
+    }
+}

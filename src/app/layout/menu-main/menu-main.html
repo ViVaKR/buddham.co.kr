@@ -1,0 +1,35 @@
+<div class="flex gap-1 items-center">
+
+    @for (group of navGroup(); track $index) {
+
+        <a #rla="routerLinkActive" [routerLink]="[group.url]"
+           class="text-base h-full py-2 text-slate-200
+           rounded-bl-3xl rounded-tr-3xl rounded-br-xs
+           transition duration-300 ease-in-out
+           border-b-4 border-transparent hover:bg-teal-400/50"
+
+           [class]="!isTablet() ? 'w-38': 'w-24'"
+           [matTooltip]="group.tooltip"
+           [routerLinkActive]="['bg-teal-400/50', 'border-yellow-400', 'text-yellow-300']">
+
+            <div class="flex gap-1 justify-center items-center">
+                <span class="font-noto text-base">{{ group.ko }}</span>
+
+                @if (!isTablet()) {
+                    <span class="text-slate-100/50">&bull;</span>
+                    <span class="font-noto text-base">{{ group.hj }}</span>
+                }
+
+            </div>
+
+            @if (!isMobile()) {
+                <div class="flex justify-center items-center">
+                    <span [class.active]="rla.isActive"
+                          class="text-xs tracking-tighter font-inter"> {{ group.en }}
+                    </span>
+                </div>
+            }
+        </a>
+    }
+
+</div>

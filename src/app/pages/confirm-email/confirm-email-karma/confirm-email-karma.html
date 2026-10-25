@@ -1,0 +1,46 @@
+<body-layout>
+  <div content class="max-w-full min-h-screen flex flex-col gap-4 p-4 bg-amber-50/50">
+    <form
+          (ngSubmit)="onSubmit($event)"
+          [formGroup]="form"
+          class="p-8" flex flex-col gap-2
+          #formDirective="ngForm">
+
+      <!-- 이메일 (email) -->
+      <mat-form-field appearance="outline" class="w-full">
+
+        <mat-label>아이디 (이메일)</mat-label>
+        <input matInput readonly
+               required
+               class="text-slate-600" formControlName="email">
+        <mat-icon matPrefix fontSet="material-icons-outlined">email</mat-icon>
+        @if (hasError('email', 'required')) {
+        <mat-error>이메일은 필수 항목입니다.</mat-error>
+        }
+        @if (hasError('email', 'email')) {
+        <mat-error>올바른 이메일 형식이 아닙니다.</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- 토큰 -->
+      <mat-form-field appearance="outline" class="w-full">
+
+        <mat-label>토큰</mat-label>
+        <textarea matInput required
+                  class="text-slate-600"
+                  formControlName="token"
+                  cdkTextareaAutosize
+                  rows="5"
+                  readonly></textarea>
+        <mat-icon matPrefix fontSet="material-icons-outlined">badge</mat-icon>
+      </mat-form-field>
+      <!-- 버튼 -->
+      <div class="w-full flex justify-center">
+        <button matButton="outlined" type="submit" [disabled]="loading()">
+          {{ loading() ? '전송중...' : '인증메일 회신' }}
+          <mat-icon matPrefix>send</mat-icon>
+        </button>
+      </div>
+    </form>
+  </div>
+</body-layout>
