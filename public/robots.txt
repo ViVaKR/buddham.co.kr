@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /SignUp/
+Disallow: /SignIn/
+Disallow: /change-password/
+Disallow: /ForgetPassword/
+Disallow: /ConfirmEmail/
+Disallow: /Chat/
+Disallow: /FileUploader/
+
+Sitemap: https://buddham.co.kr/sitemap.xml
