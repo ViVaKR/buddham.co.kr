@@ -27,32 +27,6 @@ import {
   MarkdownModuleConfig, MARKED_OPTIONS, MarkedRenderer, provideMarkdown
 } from 'ngx-markdown';
 
-export function markedOptionsFactory(): MarkedOptions {
-  const renderer = new MarkedRenderer();
-  return {
-    renderer: renderer,
-    gfm: true,
-    breaks: true,
-    pedantic: false
-  };
-}
-
-const markdownConfig: MarkdownModuleConfig = {
-  loader: HttpClient,
-  markedOptions: {
-    provide: MARKED_OPTIONS,
-    useFactory: markedOptionsFactory,
-    deps: []
-  },
-  clipboardOptions: {
-    provide: CLIPBOARD_OPTIONS,
-    useValue: {
-      buttonComponent: ClipboardButtonComponent
-    }
-  }
-}
-// ──────────────────────────────────────────────────────
-
 registerLocaleData(localeKo);
 
 export const appConfig: ApplicationConfig = {
@@ -125,6 +99,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([tokenInterceptor, httpErrorInterceptor])),
     { provide: COMPOSITION_BUFFER_MODE, useValue: false },
     { provide: LOCALE_ID, useValue: 'ko-KR' },
-    provideMarkdown(markdownConfig)
+    // provideMarkdown(markdownConfig)
   ],
 };

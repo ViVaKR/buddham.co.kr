@@ -36,8 +36,6 @@ export class MenuDataService extends MenuFilterService {
     Paths.Pitaka,     // 삼장
     Paths.Sutra,      // 경전
     Paths.Lekhana,    // 사경
-    Paths.DhammaChat, // 법담
-    Paths.Chat,
     Paths.Guide,
   ];
 
